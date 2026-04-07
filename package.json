@@ -1,0 +1,24 @@
+{
+  "name": "lexevo-platform",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "overrides": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "scripts": {
+    "dev:web": "npm run dev --workspace @lexevo/web",
+    "dev:api": "npm run dev --workspace @lexevo/api",
+    "start:api": "npm run start --workspace @lexevo/api",
+    "build:web": "npm run build --workspace @lexevo/web",
+    "build:api": "npm run build --workspace @lexevo/api"
+  }
+}

@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body), sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(200, 154, 75, 0.18), transparent 30%),
+    linear-gradient(180deg, #09111f 0%, #050914 100%);
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display), serif;
+    letter-spacing: -0.03em;
+  }
+
+  input,
+  textarea,
+  select {
+    @apply mt-2 w-full rounded-[1.25rem] border border-white/10 bg-white/5 px-4 py-3 text-sm text-sand outline-none transition placeholder:text-mist/35 focus:border-bronze/50 focus:bg-white/10;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply rounded-[2.25rem] border border-white/10 bg-white/[0.04] backdrop-blur;
+  }
+
+  .button-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-bronze px-5 py-3 text-sm font-medium text-ink transition hover:bg-sand;
+  }
+
+  .button-secondary {
+    @apply inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-medium text-sand transition hover:border-bronze/40 hover:bg-white/10;
+  }
+
+  .metric-card {
+    @apply rounded-[1.75rem] border border-white/10 bg-white/5 p-4;
+  }
+
+  .metric-value {
+    @apply text-2xl font-semibold text-sand;
+  }
+
+  .metric-label {
+    @apply mt-2 text-xs uppercase tracking-[0.25em] text-mist/60;
+  }
+
+  .section-shell {
+    @apply mt-8 rounded-[2.5rem] border border-white/10 bg-white/[0.03] p-6 sm:p-8;
+  }
+
+  .section-heading {
+    @apply max-w-4xl font-display text-4xl leading-tight text-sand sm:text-5xl;
+  }
+
+  .eyebrow {
+    @apply text-xs uppercase tracking-[0.35em] text-bronze;
+  }
+
+  .feature-card {
+    @apply rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 transition hover:-translate-y-0.5 hover:border-bronze/35 hover:bg-white/[0.06];
+  }
+
+  .tag {
+    @apply rounded-full border border-bronze/25 bg-bronze/10 px-3 py-1 text-xs uppercase tracking-[0.18em] text-bronze;
+  }
+
+  .field {
+    @apply block text-sm text-mist/75;
+  }
+}
