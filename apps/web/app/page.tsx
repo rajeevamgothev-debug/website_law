@@ -69,6 +69,9 @@ export default function HomePage() {
             <Link href="/messages" className="button-secondary">
               Messages
             </Link>
+            <Link href="/admin" className="button-secondary">
+              Admin
+            </Link>
             <Link href="/ai-workbench" className="button-secondary">
               AI
             </Link>
@@ -106,6 +109,9 @@ export default function HomePage() {
               </Link>
               <Link href="/messages" className="button-secondary">
                 Open message center
+              </Link>
+              <Link href="/admin" className="button-secondary">
+                Open admin
               </Link>
               <Link href="/groups" className="button-secondary">
                 Open practice groups

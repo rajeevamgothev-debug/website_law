@@ -1,0 +1,216 @@
+GIT WORKFLOW GUIDE FOR THIS PROJECT
+Repository root:
+C:\Users\rajee\Documents\GitHub\New folder\website_law
+
+Important:
+- This project has one Git repository at the root folder.
+- Use Git from the root folder.
+- Do not use: node git pull
+- Best practice: do not use Git from apps\web or apps\api unless you understand parent-repo Git behavior.
+- For this repo, remote name is: origin
+- For this repo, branch is: main
+
+==================================================
+1. ONLY PULL LATEST CHANGES
+==================================================
+
+Use this when:
+- You did not make local code changes
+- You only want the newest code from GitHub
+
+Steps:
+
+1. Open PowerShell
+
+2. Go to the repo root:
+cd "C:\Users\rajee\Documents\GitHub\New folder\website_law"
+
+3. Check current status:
+git status
+
+4. Pull latest code:
+git pull origin main
+
+What this does:
+- Contacts GitHub
+- Downloads latest changes from branch main
+- Updates your local files
+
+If Git says "Already up to date":
+- Your local code already matches GitHub
+
+If Git gives an error:
+- You may have local changes
+- In that case, follow section 3 instead
+
+==================================================
+2. YOU CHANGED CODE AND WANT TO PUSH IT
+==================================================
+
+Use this when:
+- You edited files locally
+- You want to upload your work to GitHub
+
+Steps:
+
+1. Open PowerShell
+
+2. Go to the repo root:
+cd "C:\Users\rajee\Documents\GitHub\New folder\website_law"
+
+3. Check what changed:
+git status
+
+4. Add your changes:
+git add .
+
+Note:
+- git add . stages all changed files
+- If there are unwanted files, do not run git add . blindly
+- Example: if tast.txt should not be pushed, remove it or do not stage it
+
+5. Create a commit:
+git commit -m "describe your changes"
+
+Example:
+git commit -m "Fix discovery API URL and improve error handling"
+
+6. Push to GitHub:
+git push origin main
+
+What this does:
+- Saves your changes in a commit
+- Uploads that commit to GitHub
+
+If push is rejected:
+- Someone else may have pushed new code first
+- Then use section 3
+
+==================================================
+3. YOU CHANGED CODE, BUT ALSO NEED TO PULL LATEST CODE FIRST
+==================================================
+
+Use this when:
+- You changed files locally
+- Remote GitHub branch also has new commits
+- You need both: your changes and latest remote code
+
+Recommended safe flow:
+
+1. Open PowerShell
+
+2. Go to the repo root:
+cd "C:\Users\rajee\Documents\GitHub\New folder\website_law"
+
+3. Check changes:
+git status
+
+4. Stage your changes:
+git add .
+
+5. Commit your changes:
+git commit -m "describe your changes"
+
+6. Pull remote changes with rebase:
+git pull --rebase origin main
+
+Why use --rebase:
+- It puts your local commit on top of the latest remote commit
+- History stays cleaner
+
+Possible results:
+
+A. Success:
+- Rebase completes
+- Then push:
+git push origin main
+
+B. Conflict happens:
+- Git will stop and show conflicted files
+
+Then do this:
+
+1. Check conflict status:
+git status
+
+2. Open the conflicted files and fix the conflict markers:
+<<<<<<<
+=======
+>>>>>>>
+
+3. After fixing each conflicted file:
+git add <file-name>
+
+Example:
+git add apps\web\components\discovery-explorer.tsx
+
+4. Continue rebase:
+git rebase --continue
+
+5. If more conflicts appear, repeat the same steps
+
+6. When rebase finishes, push:
+git push origin main
+
+If you want to stop the rebase:
+git rebase --abort
+
+That returns you to the state before the rebase started
+
+==================================================
+WHEN TO USE cd apps\web OR cd apps\api
+==================================================
+
+Use root for Git:
+cd "C:\Users\rajee\Documents\GitHub\New folder\website_law"
+
+Use app folders for app commands only:
+
+Frontend:
+cd "C:\Users\rajee\Documents\GitHub\New folder\website_law\apps\web"
+npm run dev
+
+Backend:
+cd "C:\Users\rajee\Documents\GitHub\New folder\website_law\apps\api"
+npm run dev
+
+But for Git, root is preferred:
+git status
+git pull origin main
+git add .
+git commit -m "message"
+git push origin main
+
+==================================================
+COMMON SAFE COMMAND SETS
+==================================================
+
+Only pull:
+cd "C:\Users\rajee\Documents\GitHub\New folder\website_law"
+git status
+git pull origin main
+
+Change and push:
+cd "C:\Users\rajee\Documents\GitHub\New folder\website_law"
+git status
+git add .
+git commit -m "your message"
+git push origin main
+
+Change, pull, then push:
+cd "C:\Users\rajee\Documents\GitHub\New folder\website_law"
+git status
+git add .
+git commit -m "your message"
+git pull --rebase origin main
+git push origin main
+
+==================================================
+DO NOT DO THESE
+==================================================
+
+- node git pull
+- git pull without checking status when you already changed files
+- git add . if there are unwanted files
+- working from the wrong folder
+

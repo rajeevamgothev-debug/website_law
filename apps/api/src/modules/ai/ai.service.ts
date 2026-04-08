@@ -823,7 +823,9 @@ async function generateSectionResponse(payload: MatterResearchRequest): Promise<
       section: suggestion.section?.trim() ?? "",
       title: suggestion.title?.trim() ?? "",
       whyRelevant: suggestion.whyRelevant?.trim() ?? "",
-      caution: suggestion.caution?.trim()
+      caution:
+        suggestion.caution?.trim() ??
+        "Cross-check the latest statutory text, amendments, and forum-specific applicability before using this section."
     }))
     .filter((suggestion) => suggestion.statute && suggestion.section)
     .slice(0, 5);

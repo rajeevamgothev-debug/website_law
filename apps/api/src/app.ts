@@ -1,6 +1,7 @@
 import cors from "cors";
 import express, { type NextFunction, type Request, type Response } from "express";
 
+import { adminRouter } from "./modules/admin/admin.routes";
 import { aiRouter } from "./modules/ai/ai.routes";
 import { env } from "./config/env";
 import { authRouter } from "./modules/auth/auth.routes";
@@ -46,6 +47,9 @@ export function createApp() {
         search: "/api/search/lawyers",
         searchCities: "/api/search/cities",
         otp: "/api/auth/request-otp",
+        adminLogin: "/api/auth/admin/login",
+        adminSession: "/api/auth/admin/session",
+        adminOverview: "/api/admin/overview",
         consultations: "/api/leads/consultations",
         socialFeed: "/api/social/feed",
         socialTrends: "/api/social/trending",
@@ -78,6 +82,7 @@ export function createApp() {
   app.use("/api/health", healthRouter);
   app.use("/api/ai", aiRouter);
   app.use("/api/auth", authRouter);
+  app.use("/api/admin", adminRouter);
   app.use("/api/profiles", profileRouter);
   app.use("/api/search", searchRouter);
   app.use("/api/leads", leadsRouter);
