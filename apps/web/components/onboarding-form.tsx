@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { apiBaseUrl } from "./api-base-url";
 import {
   defaultDraft,
   languageOptions,
@@ -79,8 +80,10 @@ export function OnboardingForm() {
       return;
     }
 
+    const endpoint = `${apiBaseUrl}/api/auth/request-otp`;
+
     try {
-      const response = await fetch("http://127.0.0.1:4000/api/auth/request-otp", {
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -91,7 +94,7 @@ export function OnboardingForm() {
       });
 
       if (!response.ok) {
-        throw new Error("OTP request failed.");
+        throw new Error(`OTP request failed with status ${response.status}.`);
       }
 
       const payload = (await response.json()) as {
@@ -102,7 +105,12 @@ export function OnboardingForm() {
       setOtpMessage(`Mock OTP sent via ${payload.deliveryChannel}. Use any 6 digits to verify in this prototype.`);
       setStatusMessage("");
       setValidationMessage("");
-    } catch {
+    } catch (error) {
+      console.error("Failed to request OTP.", {
+        endpoint,
+        phoneOrEmail: draft.phoneOrEmail,
+        error
+      });
       setOtpMessage("API not reachable. In this local prototype, you can still enter any 6-digit OTP and verify.");
       setStatusMessage("");
     }

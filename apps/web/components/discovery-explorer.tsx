@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, useTransition, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 
 import type { LawyerProfileSummary, PracticeArea } from "@lexevo/contracts";
 
@@ -56,31 +56,67 @@ export function DiscoveryExplorer({
   });
   const [results, setResults] = useState<LawyerProfileSummary[]>([]);
   const [cities, setCities] = useState<string[]>([]);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [citiesErrorMessage, setCitiesErrorMessage] = useState("");
+  const [searchErrorMessage, setSearchErrorMessage] = useState("");
   const [loadingCities, setLoadingCities] = useState(true);
-  const [isPending, startTransition] = useTransition();
+  const [loadingResults, setLoadingResults] = useState(false);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function loadCities() {
+      const endpoint = `${apiBaseUrl}/api/search/cities`;
+
       try {
-        const response = await fetch(`${apiBaseUrl}/api/search/cities`);
+        const response = await fetch(endpoint, {
+          signal: controller.signal
+        });
+
+        if (!response.ok) {
+          throw new Error(`Discovery cities request failed with status ${response.status}.`);
+        }
+
         const payload = (await response.json()) as { cities: string[] };
+
+        if (!Array.isArray(payload.cities)) {
+          throw new Error("Discovery cities payload is missing the cities array.");
+        }
+
         setCities(payload.cities);
-      } catch {
-        setErrorMessage("Discovery cities could not be loaded.");
+        setCitiesErrorMessage("");
+      } catch (error) {
+        if (controller.signal.aborted) {
+          return;
+        }
+
+        console.error("Failed to load discovery cities.", {
+          endpoint,
+          error
+        });
+        setCities([]);
+        setCitiesErrorMessage("Discovery cities could not be loaded. Please try again later.");
       } finally {
-        setLoadingCities(false);
+        if (!controller.signal.aborted) {
+          setLoadingCities(false);
+        }
       }
     }
 
     void loadCities();
+
+    return () => {
+      controller.abort();
+    };
   }, []);
 
   useEffect(() => {
-    void runSearch({
+    const nextFilters = {
       ...defaultFilters,
       city: initialCity
-    });
+    };
+
+    setFilters(nextFilters);
+    void runSearch(nextFilters);
   }, [initialCity]);
 
   async function runSearch(nextFilters: SearchState) {
@@ -110,26 +146,41 @@ export function DiscoveryExplorer({
       params.set("maxConsultationFeeInr", nextFilters.budget);
     }
 
+    const queryString = params.toString();
+    const endpoint = queryString
+      ? `${apiBaseUrl}/api/search/lawyers?${queryString}`
+      : `${apiBaseUrl}/api/search/lawyers`;
+
+    setLoadingResults(true);
+    setSearchErrorMessage("");
+
     try {
-      const response = await fetch(`${apiBaseUrl}/api/search/lawyers?${params.toString()}`);
+      const response = await fetch(endpoint);
 
       if (!response.ok) {
-        throw new Error("Search request failed.");
+        throw new Error(`Search request failed with status ${response.status}.`);
       }
 
       const payload = (await response.json()) as {
         results: LawyerProfileSummary[];
       };
 
-      startTransition(() => {
-        setResults(payload.results);
-        setErrorMessage("");
+      if (!Array.isArray(payload.results)) {
+        throw new Error("Discovery search payload is missing the results array.");
+      }
+
+      setResults(payload.results);
+    } catch (error) {
+      console.error("Failed to load discovery search results.", {
+        endpoint,
+        filters: nextFilters,
+        error
       });
-    } catch {
-      setErrorMessage("Search is unavailable right now. Confirm the API is running on port 4000.");
-      startTransition(() => {
-        setResults([]);
-      });
+
+      setResults([]);
+      setSearchErrorMessage("Search is unavailable right now. Please try again shortly.");
+    } finally {
+      setLoadingResults(false);
     }
   }
 
@@ -180,6 +231,10 @@ export function DiscoveryExplorer({
             <div className="mt-5 flex flex-wrap gap-3">
               {loadingCities ? (
                 <p className="text-sm text-mist/70">Loading cities...</p>
+              ) : citiesErrorMessage ? (
+                <p className="text-sm text-rose-300">{citiesErrorMessage}</p>
+              ) : cities.length === 0 ? (
+                <p className="text-sm text-mist/70">No discovery cities are available right now.</p>
               ) : (
                 cities.map((city) => (
                   <Link key={city} href={`/find-lawyers/city/${encodeURIComponent(city)}`} className="tag">
@@ -261,7 +316,7 @@ export function DiscoveryExplorer({
             </label>
             <div className="flex flex-wrap gap-3 lg:col-span-6">
               <button className="button-primary" type="submit">
-                {isPending ? "Searching..." : "Find lawyers"}
+                {loadingResults ? "Searching..." : "Find lawyers"}
               </button>
               <button className="button-secondary" type="button" onClick={handleReset}>
                 Reset filters
@@ -269,12 +324,14 @@ export function DiscoveryExplorer({
             </div>
           </form>
 
-          {errorMessage ? <p className="mt-4 text-sm text-rose-300">{errorMessage}</p> : null}
+          {searchErrorMessage ? <p className="mt-4 text-sm text-rose-300">{searchErrorMessage}</p> : null}
 
           <div className="mt-8 flex items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.28em] text-bronze">Results</p>
-              <p className="mt-2 text-sm text-mist/75">{results.length} lawyers matched these filters.</p>
+              <p className="mt-2 text-sm text-mist/75">
+                {loadingResults ? "Loading matching lawyers..." : `${results.length} lawyers matched these filters.`}
+              </p>
             </div>
           </div>
 
@@ -320,7 +377,7 @@ export function DiscoveryExplorer({
               </article>
             ))}
 
-            {results.length === 0 ? (
+            {!loadingResults && !searchErrorMessage && results.length === 0 ? (
               <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8 text-sm leading-7 text-mist/75 lg:col-span-2">
                 No lawyers matched the current filters. Try a broader city, remove the court filter, or raise the budget cap.
               </div>

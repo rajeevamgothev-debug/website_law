@@ -6,6 +6,26 @@ import { useEffect, useState } from "react";
 import { clearDraft, readDraft, type OnboardingDraft } from "./onboarding-storage";
 import { DraftProfilePreview } from "./draft-profile-preview";
 
+function fallbackCopyText(value: string) {
+  const textArea = document.createElement("textarea");
+
+  textArea.value = value;
+  textArea.setAttribute("readonly", "true");
+  textArea.style.position = "absolute";
+  textArea.style.left = "-9999px";
+
+  document.body.appendChild(textArea);
+  textArea.select();
+
+  const copied = document.execCommand("copy");
+
+  document.body.removeChild(textArea);
+
+  if (!copied) {
+    throw new Error("Document copy command was rejected.");
+  }
+}
+
 export function PublishedDraftProfile({ handle }: { handle: string }) {
   const [draft, setDraft] = useState<OnboardingDraft | null>(null);
   const [loaded, setLoaded] = useState(false);
@@ -19,9 +39,18 @@ export function PublishedDraftProfile({ handle }: { handle: string }) {
 
   async function copyLink(value: string, message: string) {
     try {
-      await navigator.clipboard.writeText(value);
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(value);
+      } else {
+        fallbackCopyText(value);
+      }
+
       setStatusMessage(message);
-    } catch {
+    } catch (error) {
+      console.error("Failed to copy published profile link.", {
+        value,
+        error
+      });
       setStatusMessage("Clipboard access failed in this browser.");
     }
   }

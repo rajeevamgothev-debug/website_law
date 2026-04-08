@@ -311,7 +311,7 @@ export function AiWorkbench() {
 
     setChatError("");
     setChatLoading(true);
-    const updatedHistory = [...chatHistory, { role: "user", content: trimmed }];
+    const updatedHistory: AiChatMessage[] = [...chatHistory, { role: "user", content: trimmed }];
     setChatHistory(updatedHistory);
     setChatInput("");
 
