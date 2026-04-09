@@ -18,6 +18,7 @@
     "dev:web": "npm run dev --workspace @lexevo/web",
     "dev:api": "npm run dev --workspace @lexevo/api",
     "start:api": "npm run start --workspace @lexevo/api",
+    "start:web": "npm run start --workspace @lexevo/web -- --hostname 0.0.0.0 -p 3000",
     "build:web": "npm run build --workspace @lexevo/web",
     "build:api": "npm run build --workspace @lexevo/api"
   }
