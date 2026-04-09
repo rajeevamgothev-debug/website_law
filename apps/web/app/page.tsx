@@ -47,86 +47,86 @@ export default function HomePage() {
   return (
     <main className="min-h-screen overflow-x-hidden bg-ink text-sand">
       <div className="absolute inset-0 -z-10 bg-grid bg-[size:42px_42px] opacity-20" />
-      <div className="absolute left-1/2 top-0 -z-10 h-[36rem] w-[36rem] -translate-x-1/2 rounded-full bg-bronze/20 blur-3xl" />
-      <div className="mx-auto max-w-7xl px-6 pb-24 pt-8 sm:px-8 lg:px-12">
-        <header className="flex flex-wrap items-center justify-between gap-4">
-          <div>
+      <div className="absolute left-1/2 top-0 -z-10 h-[24rem] w-[24rem] -translate-x-1/2 rounded-full bg-bronze/20 blur-3xl sm:h-[36rem] sm:w-[36rem]" />
+      <div className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-8 sm:pb-24 sm:pt-8 lg:px-12">
+        <header className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="max-w-xl">
             <p className="text-xs uppercase tracking-[0.35em] text-mist/70">Lexevo</p>
             <p className="mt-2 max-w-md text-sm text-mist/75">
               Legal identity, discovery, client growth, and audience-building for the next generation of law practice.
             </p>
           </div>
-          <nav className="flex items-center gap-3 text-sm">
-            <Link href="/onboarding" className="button-secondary">
+          <nav className="grid w-full grid-cols-2 gap-3 text-sm sm:grid-cols-3 lg:w-auto lg:grid-cols-4">
+            <Link href="/onboarding" className="button-secondary min-h-[3rem]">
               View onboarding
             </Link>
-            <Link href="/find-lawyers" className="button-secondary">
+            <Link href="/find-lawyers" className="button-secondary min-h-[3rem]">
               Find lawyers
             </Link>
-            <Link href="/network" className="button-secondary">
+            <Link href="/network" className="button-secondary min-h-[3rem]">
               Social feed
             </Link>
-            <Link href="/messages" className="button-secondary">
+            <Link href="/messages" className="button-secondary min-h-[3rem]">
               Messages
             </Link>
-            <Link href="/admin" className="button-secondary">
+            <Link href="/admin" className="button-secondary min-h-[3rem]">
               Admin
             </Link>
-            <Link href="/ai-workbench" className="button-secondary">
+            <Link href="/ai-workbench" className="button-secondary min-h-[3rem]">
               AI
             </Link>
-            <Link href="/workspace" className="button-secondary">
+            <Link href="/workspace" className="button-secondary min-h-[3rem]">
               Workspace
             </Link>
-            <Link href="/lawyers/adv-isha-reddy" className="button-primary">
+            <Link href="/lawyers/adv-isha-reddy" className="button-primary min-h-[3rem]">
               Open profile preview
             </Link>
           </nav>
         </header>
 
-        <section className="grid gap-10 pb-20 pt-16 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+        <section className="grid gap-8 pb-16 pt-12 sm:gap-10 sm:pb-20 sm:pt-16 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
           <div>
             <p className="eyebrow">Phase 6 workspace live</p>
-            <h1 className="mt-4 max-w-4xl font-display text-6xl leading-none text-sand sm:text-7xl">
+            <h1 className="mt-4 max-w-4xl font-display text-5xl leading-[0.95] text-sand sm:text-6xl lg:text-7xl">
               A legal platform where every lawyer owns a premium digital identity, audience engine, communication layer, AI workbench, and daily workspace.
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-mist/80">
+            <p className="mt-6 max-w-2xl text-base leading-7 text-mist/80 sm:text-lg sm:leading-8">
               Designed to merge the discoverability of a marketplace, the authority of a personal website,
               and the network effects of a professional graph without flattening lawyers into commodity listings.
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/onboarding" className="button-primary">
+            <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              <Link href="/onboarding" className="button-primary min-h-[3.25rem]">
                 Start onboarding flow
               </Link>
-              <Link href="/find-lawyers" className="button-secondary">
+              <Link href="/find-lawyers" className="button-secondary min-h-[3.25rem]">
                 Browse lawyer discovery
               </Link>
-              <Link href="/creator-studio" className="button-secondary">
+              <Link href="/creator-studio" className="button-secondary min-h-[3.25rem]">
                 Open creator studio
               </Link>
-              <Link href="/network" className="button-secondary">
+              <Link href="/network" className="button-secondary min-h-[3.25rem]">
                 Explore social feed
               </Link>
-              <Link href="/messages" className="button-secondary">
+              <Link href="/messages" className="button-secondary min-h-[3.25rem]">
                 Open message center
               </Link>
-              <Link href="/admin" className="button-secondary">
+              <Link href="/admin" className="button-secondary min-h-[3.25rem]">
                 Open admin
               </Link>
-              <Link href="/groups" className="button-secondary">
+              <Link href="/groups" className="button-secondary min-h-[3.25rem]">
                 Open practice groups
               </Link>
-              <Link href="/ai-workbench" className="button-secondary">
+              <Link href="/ai-workbench" className="button-secondary min-h-[3.25rem]">
                 Open AI workbench
               </Link>
-              <Link href="/workspace" className="button-secondary">
+              <Link href="/workspace" className="button-secondary min-h-[3.25rem]">
                 Open workspace
               </Link>
-              <a href="#featured-lawyers" className="button-secondary">
+              <a href="#featured-lawyers" className="button-secondary min-h-[3.25rem]">
                 Explore featured profiles
               </a>
             </div>
-            <div className="mt-10 grid gap-4 sm:grid-cols-3">
+            <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               <article className="metric-card">
                 <p className="metric-value">06</p>
                 <p className="metric-label">MVP phases live locally</p>
@@ -142,7 +142,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <aside className="panel relative overflow-hidden p-8 shadow-halo">
+          <aside className="panel relative overflow-hidden p-6 shadow-halo sm:p-8">
             <div className="absolute right-6 top-6 h-24 w-24 rounded-full border border-bronze/30 bg-bronze/10 blur-sm" />
             <p className="eyebrow">Why this foundation matters</p>
             <div className="mt-6 space-y-5">
@@ -167,7 +167,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-8 grid gap-5 lg:grid-cols-7">
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-7">
             {mvpTracks.map((track) => (
               <article key={track.title} className="feature-card">
                 <p className="text-xs uppercase tracking-[0.28em] text-bronze">{track.title}</p>
@@ -183,15 +183,15 @@ export default function HomePage() {
             <h2 className="section-heading">Lawyer profiles that read like polished legal brands.</h2>
           </div>
 
-          <div className="mt-8 grid gap-5 lg:grid-cols-3">
+          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
             {featuredLawyers.map((lawyer) => (
               <Link key={lawyer.handle} href={`/lawyers/${lawyer.handle}`} className="feature-card group">
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <p className="font-display text-3xl text-sand">{lawyer.fullName}</p>
+                    <p className="font-display text-2xl text-sand sm:text-3xl">{lawyer.fullName}</p>
                     <p className="mt-2 text-sm uppercase tracking-[0.25em] text-bronze">{lawyer.city}</p>
                   </div>
-                  <span className="rounded-full border border-bronze/30 px-3 py-1 text-xs text-bronze">
+                  <span className="w-fit rounded-full border border-bronze/30 px-3 py-1 text-xs text-bronze">
                     {lawyer.averageRating.toFixed(1)} / 5
                   </span>
                 </div>

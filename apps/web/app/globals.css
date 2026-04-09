@@ -13,8 +13,11 @@ html {
 body {
   font-family: var(--font-body), sans-serif;
   background:
-    radial-gradient(circle at top, rgba(200, 154, 75, 0.18), transparent 30%),
-    linear-gradient(180deg, #09111f 0%, #050914 100%);
+    radial-gradient(circle at 12% 12%, rgba(86, 233, 255, 0.14), transparent 22%),
+    radial-gradient(circle at 88% 10%, rgba(200, 154, 75, 0.16), transparent 24%),
+    radial-gradient(circle at 50% 100%, rgba(124, 92, 255, 0.12), transparent 28%),
+    linear-gradient(180deg, #060918 0%, #04070f 100%);
+  color: #f3ebdc;
 }
 
 @layer base {
@@ -29,29 +32,44 @@ body {
   input,
   textarea,
   select {
-    @apply mt-2 w-full rounded-[1.25rem] border border-white/10 bg-white/5 px-4 py-3 text-sm text-sand outline-none transition placeholder:text-mist/35 focus:border-bronze/50 focus:bg-white/10;
+    @apply mt-2 w-full rounded-[1.25rem] border border-white/10 bg-white/[0.06] px-4 py-3 text-sm text-sand outline-none transition placeholder:text-mist/35 focus:border-[#79e5ff]/40 focus:bg-white/[0.1];
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
   }
 }
 
 @layer components {
   .panel {
-    @apply rounded-[2.25rem] border border-white/10 bg-white/[0.04] backdrop-blur;
+    @apply rounded-[2.25rem] border border-white/10 bg-white/[0.04] backdrop-blur-xl;
+    box-shadow:
+      0 24px 90px rgba(3, 8, 18, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .button-primary {
-    @apply inline-flex items-center justify-center rounded-full bg-bronze px-5 py-3 text-sm font-medium text-ink transition hover:bg-sand;
+    @apply inline-flex max-w-full items-center justify-center rounded-full px-5 py-3 text-center text-sm font-medium text-ink transition hover:bg-sand;
+    background: linear-gradient(135deg, #79e5ff 0%, #c89a4b 100%);
+    box-shadow: 0 10px 40px rgba(121, 229, 255, 0.18);
   }
 
   .button-secondary {
-    @apply inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-medium text-sand transition hover:border-bronze/40 hover:bg-white/10;
+    @apply inline-flex max-w-full items-center justify-center rounded-full border px-5 py-3 text-center text-sm font-medium text-sand transition;
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .button-secondary:hover {
+    border-color: rgba(121, 229, 255, 0.3);
+    background: rgba(255, 255, 255, 0.08);
   }
 
   .metric-card {
-    @apply rounded-[1.75rem] border border-white/10 bg-white/5 p-4;
+    @apply rounded-[1.75rem] border border-white/10 bg-white/[0.05] p-4;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
   .metric-value {
-    @apply text-2xl font-semibold text-sand;
+    @apply break-words text-2xl font-semibold text-sand;
   }
 
   .metric-label {
@@ -60,6 +78,9 @@ body {
 
   .section-shell {
     @apply mt-8 rounded-[2.5rem] border border-white/10 bg-white/[0.03] p-6 sm:p-8;
+    box-shadow:
+      0 24px 80px rgba(3, 8, 18, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
   }
 
   .section-heading {
@@ -71,7 +92,12 @@ body {
   }
 
   .feature-card {
-    @apply rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 transition hover:-translate-y-0.5 hover:border-bronze/35 hover:bg-white/[0.06];
+    @apply rounded-[2rem] border border-white/10 bg-white/[0.04] p-6 transition hover:-translate-y-0.5 hover:bg-white/[0.06];
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .feature-card:hover {
+    border-color: rgba(121, 229, 255, 0.28);
   }
 
   .tag {
@@ -80,5 +106,46 @@ body {
 
   .field {
     @apply block text-sm text-mist/75;
+  }
+
+  .neon-panel {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .neon-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(135deg, rgba(121, 229, 255, 0.08), transparent 45%),
+      linear-gradient(315deg, rgba(200, 154, 75, 0.08), transparent 52%);
+  }
+
+  .neon-panel > * {
+    position: relative;
+  }
+
+  .status-pill {
+    @apply inline-flex items-center rounded-full border px-4 py-2 text-[0.68rem] uppercase tracking-[0.28em];
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(191, 208, 234, 0.88);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .console-card {
+    @apply rounded-[1.75rem] border border-white/10 p-5;
+    background: linear-gradient(180deg, rgba(9, 17, 31, 0.82) 0%, rgba(5, 9, 20, 0.96) 100%);
+    box-shadow:
+      0 18px 60px rgba(3, 8, 18, 0.34),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .signal-step {
+    @apply rounded-[1.6rem] border border-white/10 p-4;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 }

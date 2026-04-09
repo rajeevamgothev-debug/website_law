@@ -52,6 +52,25 @@ const personaOptions: { id: AiPersona; label: string; description: string }[] = 
   }
 ];
 
+const signalChain = [
+  {
+    title: "Speech Capture",
+    body: "Optional front-end speech-to-text converts voice into clean legal intake before analysis begins."
+  },
+  {
+    title: "Live Legal Retrieval",
+    body: "Up-to-date legal APIs enrich the matter with statutes, judgments, and structured context."
+  },
+  {
+    title: "Local Model Reasoning",
+    body: "A GPU-backed local LLaMA or Ollama stack produces contextual answers without cloud dependency."
+  },
+  {
+    title: "Text + Voice Reply",
+    body: "The answer returns as text and can be read back with text-to-speech for hands-free review."
+  }
+];
+
 export function AiWorkbench() {
   const [overview, setOverview] = useState<AiOverviewResponse | null>(null);
   const [lawyers, setLawyers] = useState<LawyerProfileSummary[]>([]);
@@ -397,12 +416,53 @@ export function AiWorkbench() {
     }
   }
 
+  const heroMetrics = [
+    {
+      label: "Active model",
+      value: overview?.model.modelLabel ?? "Offline",
+      note: overview?.model.provider === "ollama-local" ? "Local Ollama stack" : "Open-source stack"
+    },
+    {
+      label: "Profiles in context",
+      value: `${lawyers.length}`.padStart(2, "0"),
+      note: "Available for drafting and lawyer matching"
+    },
+    {
+      label: "Advisory personas",
+      value: `${personaOptions.length}`.padStart(2, "0"),
+      note: "Client, litigation, and business modes"
+    }
+  ];
+
+  const outputMetrics = [
+    {
+      label: "Research hits",
+      value: `${(caseLaw?.suggestions.length ?? 0) + (sections?.suggestions.length ?? 0)}`.padStart(2, "0"),
+      note: "Cases and sections surfaced"
+    },
+    {
+      label: "Judgment briefs",
+      value: judgmentSummary ? "01" : "00",
+      note: "Summary layer ready"
+    },
+    {
+      label: "Lawyer matches",
+      value: matchResult?.lawyers.length ? `${matchResult.lawyers.length}`.padStart(2, "0") : "00",
+      note: "Reasoned recommendations"
+    }
+  ];
+
   if (loading) {
     return (
-      <main className="min-h-screen bg-ink px-6 py-8 text-sand sm:px-8">
+      <main className="relative min-h-screen overflow-hidden bg-ink px-6 py-8 text-sand sm:px-8">
+        <div className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute inset-0 bg-grid bg-[size:72px_72px] opacity-[0.07]" />
+          <div className="absolute left-[8%] top-12 h-56 w-56 rounded-full bg-[rgba(86,233,255,0.14)] blur-3xl" />
+          <div className="absolute right-[10%] top-20 h-64 w-64 rounded-full bg-bronze/20 blur-3xl" />
+        </div>
         <div className="mx-auto max-w-7xl">
-          <div className="panel p-8">
-            <p className="text-sm text-mist/75">Loading AI workbench...</p>
+          <div className="panel neon-panel p-8">
+            <p className="text-sm text-mist/75">Loading the pro model cockpit...</p>
           </div>
         </div>
       </main>
@@ -410,42 +470,155 @@ export function AiWorkbench() {
   }
 
   return (
-    <main className="min-h-screen bg-ink px-6 py-8 text-sand sm:px-8">
+    <main className="relative min-h-screen overflow-hidden bg-ink px-6 py-8 text-sand sm:px-8">
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute inset-0 bg-grid bg-[size:72px_72px] opacity-[0.07]" />
+        <div className="absolute left-[6%] top-12 h-64 w-64 rounded-full bg-[rgba(86,233,255,0.16)] blur-3xl" />
+        <div className="absolute right-[8%] top-16 h-72 w-72 rounded-full bg-bronze/20 blur-3xl" />
+        <div className="absolute bottom-8 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-[rgba(124,92,255,0.12)] blur-3xl" />
+      </div>
       <div className="mx-auto max-w-7xl">
-        <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-          <div>
-            <p className="eyebrow">Phase 5 AI intelligence</p>
-            <h1 className="mt-4 max-w-4xl font-display text-6xl leading-none text-sand sm:text-7xl">
-              Research, summarize, explain, and draft from one AI legal workbench.
-            </h1>
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-mist/80">
-              This phase adds a local-first intelligence layer shaped for Ollama or open-source deployment across
-              research, drafting, and non-sensitive collaboration insights.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/creator-studio" className="button-secondary">
-                Open creator studio
-              </Link>
-              <Link href="/messages" className="button-secondary">
-                Open message center
-              </Link>
+        <section className="panel neon-panel overflow-hidden p-6 sm:p-8 lg:p-10">
+          <div className="grid gap-8 xl:grid-cols-[1.08fr_0.92fr]">
+            <div>
+              <div className="flex flex-wrap gap-3">
+                <span className="status-pill">Futuristic UI</span>
+                <span className="status-pill">Voice to LLaMA flow</span>
+                <span className="status-pill">Local GPU ready</span>
+              </div>
+              <p className="eyebrow mt-6">Pro model cockpit</p>
+              <h1 className="mt-4 max-w-5xl font-display text-5xl leading-[0.93] text-sand sm:text-6xl lg:text-7xl">
+                A premium legal AI control room for voice intake, live research, and private local reasoning.
+              </h1>
+              <p className="mt-6 max-w-3xl text-base leading-8 text-mist/80 sm:text-lg">
+                This surface is designed like an operator console instead of a plain dashboard, so voice capture,
+                retrieval, local inference, and spoken/text responses feel like one professional system.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a href="#research-grid" className="button-primary">
+                  Enter research grid
+                </a>
+                <a href="#counsel-console" className="button-secondary">
+                  Open counsel console
+                </a>
+                <Link href="/creator-studio" className="button-secondary">
+                  Creator studio
+                </Link>
+                <Link href="/messages" className="button-secondary">
+                  Message center
+                </Link>
+              </div>
+              <div className="mt-10 grid gap-4 md:grid-cols-3">
+                {heroMetrics.map((item) => (
+                  <article key={item.label} className="console-card">
+                    <p className="text-2xl font-semibold text-sand sm:text-3xl">{item.value}</p>
+                    <p className="mt-2 text-xs uppercase tracking-[0.28em] text-[#98ecff]/80">{item.label}</p>
+                    <p className="mt-3 text-sm leading-6 text-mist/70">{item.note}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <aside className="console-card">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.28em] text-[#98ecff]/80">Model core</p>
+                    <h2 className="mt-3 font-display text-3xl leading-none text-sand sm:text-4xl">
+                      {overview?.model.modelLabel}
+                    </h2>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.22em] text-mist/75">
+                      {overview?.model.provider}
+                    </span>
+                    <span className="rounded-full border border-[#98ecff]/20 bg-[#98ecff]/10 px-3 py-1 text-xs uppercase tracking-[0.22em] text-[#b5f3ff]">
+                      {overview?.model.deployment}
+                    </span>
+                    <span className="rounded-full border border-bronze/20 bg-bronze/10 px-3 py-1 text-xs uppercase tracking-[0.22em] text-bronze">
+                      {overview?.model.status}
+                    </span>
+                  </div>
+                </div>
+                <p className="mt-5 text-sm leading-7 text-mist/78">{overview?.model.note}</p>
+                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                  {(overview?.capabilities ?? []).slice(0, 4).map((capability) => (
+                    <div key={capability} className="rounded-[1.4rem] border border-white/10 bg-white/[0.03] p-4">
+                      <p className="text-sm leading-7 text-sand/88">{capability}</p>
+                    </div>
+                  ))}
+                </div>
+              </aside>
+
+              <div className="grid gap-4 lg:grid-cols-3">
+                {outputMetrics.map((item) => (
+                  <article key={item.label} className="console-card">
+                    <p className="text-xs uppercase tracking-[0.28em] text-mist/65">{item.label}</p>
+                    <p className="mt-4 text-4xl font-semibold text-sand">{item.value}</p>
+                    <p className="mt-3 text-sm leading-6 text-mist/70">{item.note}</p>
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
-          <aside className="panel p-6">
-            <p className="text-xs uppercase tracking-[0.28em] text-bronze">Model</p>
-            <div className="mt-5 rounded-[1.5rem] border border-bronze/20 bg-bronze/10 p-4 text-sm leading-7 text-sand/90">
-              <p className="font-medium">
-                {overview?.model.modelLabel} | {overview?.model.provider}
+
+          <div className="mt-8 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="console-card">
+              <p className="text-xs uppercase tracking-[0.28em] text-[#98ecff]/80">Target signal chain</p>
+              <p className="mt-4 text-sm leading-7 text-mist/75">
+                The workbench now makes the intended speech, retrieval, model, and response flow explicit so the UI
+                reads like a serious local AI system rather than a stack of disconnected forms.
               </p>
-              <p className="mt-2 text-mist/75">{overview?.model.note}</p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {(overview?.recommendedWorkflows ?? []).map((workflow) => (
+                  <span
+                    key={workflow}
+                    className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs uppercase tracking-[0.2em] text-mist/80"
+                  >
+                    {workflow}
+                  </span>
+                ))}
+              </div>
             </div>
-          </aside>
+            <div className="grid gap-4 md:grid-cols-2">
+              {signalChain.map((stage) => (
+                <article key={stage.title} className="signal-step">
+                  <p className="text-xs uppercase tracking-[0.28em] text-bronze">{stage.title}</p>
+                  <p className="mt-3 text-sm leading-7 text-mist/82">{stage.body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
         </section>
 
-        {errorMessage ? <p className="mt-4 text-sm text-rose-300">{errorMessage}</p> : null}
-        {noticeMessage ? <p className="mt-4 text-sm text-emerald-300">{noticeMessage}</p> : null}
+        {errorMessage || noticeMessage ? (
+          <div className="mt-4 flex flex-wrap gap-3">
+            {errorMessage ? (
+              <p className="rounded-full border border-rose-300/20 bg-rose-400/10 px-4 py-2 text-sm text-rose-200">
+                {errorMessage}
+              </p>
+            ) : null}
+            {noticeMessage ? (
+              <p className="rounded-full border border-emerald-300/20 bg-emerald-400/10 px-4 py-2 text-sm text-emerald-200">
+                {noticeMessage}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
 
-        <section className="mt-10 grid gap-6 xl:grid-cols-2">
+        <section id="research-grid" className="mt-12">
+          <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="eyebrow">Research grid</p>
+              <h2 className="mt-3 max-w-3xl font-display text-4xl leading-tight text-sand sm:text-5xl">
+                Run matter analysis inside a cleaner command surface.
+              </h2>
+            </div>
+            <p className="max-w-2xl text-sm leading-7 text-mist/72">
+              Intake, case-law surfacing, section mapping, and output review now sit under one clear operational layer.
+            </p>
+          </div>
+          <div className="grid gap-6 xl:grid-cols-2">
           <form className="panel p-6" onSubmit={runResearch}>
             <p className="text-xs uppercase tracking-[0.28em] text-bronze">Matter research</p>
             <label className="field mt-5">
@@ -490,10 +663,23 @@ export function AiWorkbench() {
               {!caseLaw && !sections ? <p className="text-sm text-mist/70">Run AI research to populate this panel.</p> : null}
             </div>
           </section>
+          </div>
         </section>
 
-        <section className="mt-10 grid gap-6 xl:grid-cols-[0.58fr_0.42fr]">
-          <form className="panel p-6" onSubmit={runJudgmentSummary}>
+        <section className="mt-12">
+          <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="eyebrow">Interpretation lab</p>
+              <h2 className="mt-3 max-w-3xl font-display text-4xl leading-tight text-sand sm:text-5xl">
+                Summaries, explanations, and insight refresh belong in one analysis bay.
+              </h2>
+            </div>
+            <p className="max-w-2xl text-sm leading-7 text-mist/72">
+              This section keeps judgment compression, legal term translation, and discussion insight review tightly grouped.
+            </p>
+          </div>
+          <div className="grid gap-6 xl:grid-cols-[0.58fr_0.42fr]">
+            <form className="panel p-6" onSubmit={runJudgmentSummary}>
             <p className="text-xs uppercase tracking-[0.28em] text-bronze">Judgment summarizer</p>
             <label className="field mt-5">
               <span>Title</span>
@@ -555,11 +741,29 @@ export function AiWorkbench() {
               </div>
             </section>
           </div>
+          </div>
         </section>
 
-        <section className="mt-10 grid gap-6 xl:grid-cols-2">
-          <form className="panel p-6" onSubmit={runPostDraft}>
+        <section className="mt-12">
+          <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="eyebrow">Drafting deck</p>
+              <h2 className="mt-3 max-w-3xl font-display text-4xl leading-tight text-sand sm:text-5xl">
+                Content generation and legal drafting feel like dedicated production modules.
+              </h2>
+            </div>
+            <p className="max-w-2xl text-sm leading-7 text-mist/72">
+              Publishing flows and notice generation now read like pro tooling instead of generic utility forms, with a
+              deeper local model budget reserved for longer-form output.
+            </p>
+          </div>
+          <div className="grid gap-6 xl:grid-cols-2">
+            <form className="panel p-6" onSubmit={runPostDraft}>
             <p className="text-xs uppercase tracking-[0.28em] text-bronze">AI post assistant</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <span className="status-pill">Extended lane</span>
+              <span className="status-pill">Deeper draft budget</span>
+            </div>
             <label className="field mt-5">
               <span>Author</span>
               <select value={postAuthor} onChange={(event) => setPostAuthor(event.target.value)}>
@@ -620,6 +824,10 @@ export function AiWorkbench() {
 
           <form className="panel p-6" onSubmit={runNoticeDraft}>
             <p className="text-xs uppercase tracking-[0.28em] text-bronze">AI legal notice assistant</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <span className="status-pill">Extended lane</span>
+              <span className="status-pill">Long-form notice mode</span>
+            </div>
             <label className="field mt-5">
               <span>Author</span>
               <select value={noticeAuthor} onChange={(event) => setNoticeAuthor(event.target.value)}>
@@ -664,13 +872,31 @@ export function AiWorkbench() {
               </div>
             ) : null}
           </form>
+          </div>
         </section>
-        <section className="mt-10 grid gap-6 lg:grid-cols-[0.62fr_0.38fr]">
-          <form className="panel p-6" onSubmit={runChat}>
+        <section id="counsel-console" className="mt-12">
+          <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className="eyebrow">Counsel console</p>
+              <h2 className="mt-3 max-w-3xl font-display text-4xl leading-tight text-sand sm:text-5xl">
+                Advice, summarization, and lawyer matching close the loop in the final decision layer.
+              </h2>
+            </div>
+            <p className="max-w-2xl text-sm leading-7 text-mist/72">
+              Once research is ready, the interface shifts into chat, client-ready compression, and professional routing.
+            </p>
+          </div>
+          <div className="grid gap-6 lg:grid-cols-[0.62fr_0.38fr]">
+            <form className="panel p-6" onSubmit={runChat}>
             <p className="text-xs uppercase tracking-[0.28em] text-bronze">Conversational assistant</p>
             <p className="mt-3 text-sm leading-7 text-mist/70">
-              Switch personas, share your case details, and let the assistant answer follow-up questions in chat.
+              Switch personas, share your case details, and let the assistant answer follow-up questions in the faster
+              local-response lane.
             </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <span className="status-pill">Fast lane</span>
+              <span className="status-pill">Lower latency chat</span>
+            </div>
             <div className="mt-5 grid gap-2 sm:grid-cols-3">
               {personaOptions.map((persona) => (
                 <button
@@ -691,7 +917,7 @@ export function AiWorkbench() {
               {chatHistory.map((message, index) => (
                 <div key={`${message.role}-${index}`} className="rounded-2xl border border-white/5 bg-ink/40 p-4">
                   <p className="text-[0.65rem] uppercase tracking-[0.3em] text-bronze">
-                    {message.role === "assistant" ? "AI advisor" : "You"}
+                    {message.role === "assistant" ? "AI advisor" : "Operator"}
                   </p>
                   <p className="mt-2 text-sm leading-7 text-sand/90 whitespace-pre-wrap">{message.content}</p>
                 </div>
@@ -724,7 +950,7 @@ export function AiWorkbench() {
                 <span>Preferred length</span>
                 <select value={summaryLength} onChange={(event) => setSummaryLength(event.target.value as AiSummaryLength)}>
                   <option value="short">Short (2 sentences)</option>
-                  <option value="medium">Medium (3–4 sentences)</option>
+                  <option value="medium">Medium (3-4 sentences)</option>
                   <option value="detailed">Detailed (paragraph + next steps)</option>
                 </select>
               </label>
@@ -797,7 +1023,7 @@ export function AiWorkbench() {
                             </span>
                           </div>
                           <p className="mt-1 text-xs text-mist/60">
-                            {match.profile.practiceAreas.join(", ")} • {match.profile.responseTimeLabel}
+                            {match.profile.practiceAreas.join(", ")} | {match.profile.responseTimeLabel}
                           </p>
                           <p className="mt-3 text-sm leading-7 text-mist/80">{match.reason}</p>
                         </article>
@@ -811,6 +1037,7 @@ export function AiWorkbench() {
                 <p className="mt-4 text-sm text-mist/70">Generate a match to see lawyers and reasoning.</p>
               )}
             </form>
+          </div>
           </div>
         </section>
       </div>

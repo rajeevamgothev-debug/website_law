@@ -1,39 +1,17 @@
-You are a senior frontend developer working with Next.js.
+Design a local Python-driven legal AI system that integrates with my website and presents a futuristic, premium UI. The experience should feel like a professional AI command center, not a basic chatbot.
 
-I have a web app deployed at https://nyayadwar.com. The app is triggering a browser permission popup saying:
-"nyayadwar.com wants to access other apps and services on this device."
+Users must be able to type or speak their legal questions. For voice input, add front-end speech-to-text conversion before sending the text query to the back-end. The back-end should retrieve up-to-date legal data through APIs, combine that context with the user query, and pass the full prompt to a local LLaMA model running on my GPU for contextual answers.
 
-This likely comes from usage of navigator APIs such as navigator.share or similar device access APIs.
+Return the answer to the website as structured text. Also add text-to-speech so the response can be played back as spoken audio.
 
-Tasks:
+UI direction:
+- Futuristic, high-end, glassmorphism or control-room style interface
+- Clear model status, retrieval status, and response pipeline visibility
+- Separate surfaces for voice input, text input, legal context, and final answer
+- Professional-grade polish suitable for a premium legal AI product
 
-1. Identify any code that automatically triggers navigator.share or any device permission API on page load.
-2. Refactor it so that:
-
-   * These APIs are ONLY triggered after explicit user interaction (e.g., button click).
-   * No permission prompts appear automatically when the page loads.
-3. Add proper checks:
-
-   * Use `if (navigator.share)` before calling it.
-   * Wrap calls in try/catch.
-4. Ensure graceful fallback if the API is not supported.
-
-Additionally, there is another issue:
-The UI shows: "Discovery cities could not be loaded."
-
-Tasks:
-5. Check API integration in Next.js:
-
-* Ensure API base URL uses environment variable like:
-  NEXT_PUBLIC_API_URL=https://api.nyayadwar.com
-
-6. Verify frontend is calling correct endpoints.
-7. Add error handling and loading states for failed API calls.
-8. Log meaningful errors in console for debugging.
-
-Goal:
-
-* No permission popup on page load
-* Clean user-triggered interactions
-* API data loads correctly
-* Production-ready frontend behavior
+System requirements:
+- Local GPU acceleration
+- Reliable handling of API failures, empty results, and speech errors
+- Smooth performance for local development
+- Clean integration between the website, Python service, legal APIs, and local model

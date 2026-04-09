@@ -10,6 +10,11 @@ interface OllamaGenerateResponse {
   response?: string;
 }
 
+interface OllamaGenerateOptions {
+  numPredict?: number;
+  temperature?: number;
+}
+
 export async function isOllamaModelAvailable() {
   try {
     const controller = new AbortController();
@@ -30,7 +35,11 @@ export async function isOllamaModelAvailable() {
   }
 }
 
-export async function generateWithOllama(system: string, prompt: string) {
+export async function generateWithOllama(
+  system: string,
+  prompt: string,
+  options?: OllamaGenerateOptions
+) {
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), env.OLLAMA_TIMEOUT_MS);
@@ -46,8 +55,8 @@ export async function generateWithOllama(system: string, prompt: string) {
         prompt,
         stream: false,
         options: {
-          temperature: 0.2,
-          num_predict: env.OLLAMA_NUM_PREDICT
+          temperature: options?.temperature ?? 0.2,
+          num_predict: options?.numPredict ?? env.OLLAMA_NUM_PREDICT
         }
       })
     });

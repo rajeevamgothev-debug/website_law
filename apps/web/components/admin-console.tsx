@@ -216,7 +216,7 @@ export function AdminConsole() {
 
   if (isBootstrapping) {
     return (
-      <div className="panel p-6">
+      <div className="panel p-5 sm:p-6">
         <p className="text-xs uppercase tracking-[0.3em] text-bronze">Admin access</p>
         <p className="mt-4 text-sm leading-7 text-mist/75">Checking for an active admin session in this browser.</p>
       </div>
@@ -225,13 +225,13 @@ export function AdminConsole() {
 
   if (!session || !overview) {
     return (
-      <div className="panel p-6">
-        <div className="flex items-start justify-between gap-4">
+      <div className="panel p-5 sm:p-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-bronze">Admin login</p>
-            <h2 className="mt-3 font-display text-4xl text-sand">Open the Lexevo control room.</h2>
+            <h2 className="mt-3 font-display text-3xl text-sand sm:text-4xl">Open the Lexevo control room.</h2>
           </div>
-          <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-mist/65">Protected route</span>
+          <span className="w-fit rounded-full border border-white/10 px-3 py-1 text-xs text-mist/65">Protected route</span>
         </div>
 
         <p className="mt-4 max-w-2xl text-sm leading-7 text-mist/75">
@@ -264,11 +264,16 @@ export function AdminConsole() {
         {errorMessage ? <p className="mt-4 text-sm text-rose-300">{errorMessage}</p> : null}
         {statusMessage ? <p className="mt-4 text-sm text-emerald-300">{statusMessage}</p> : null}
 
-        <div className="mt-6 flex flex-wrap gap-3">
-          <button className="button-primary" type="button" onClick={() => void handleLogin()} disabled={isSubmitting}>
+        <div className="mt-6 grid gap-3 sm:flex sm:flex-wrap">
+          <button
+            className="button-primary w-full sm:w-auto"
+            type="button"
+            onClick={() => void handleLogin()}
+            disabled={isSubmitting}
+          >
             {isSubmitting ? "Signing in..." : "Sign in as admin"}
           </button>
-          <Link href="/" className="button-secondary">
+          <Link href="/" className="button-secondary w-full sm:w-auto">
             Return to website
           </Link>
         </div>
@@ -278,23 +283,23 @@ export function AdminConsole() {
 
   return (
     <div className="space-y-6">
-      <div className="panel p-6">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
+      <div className="panel p-5 sm:p-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
+          <div className="min-w-0">
             <p className="text-xs uppercase tracking-[0.3em] text-bronze">Admin session active</p>
-            <h2 className="mt-3 font-display text-4xl text-sand">Control room for {session.admin.displayName}</h2>
+            <h2 className="mt-3 font-display text-3xl text-sand sm:text-4xl">Control room for {session.admin.displayName}</h2>
             <p className="mt-3 text-sm leading-7 text-mist/75">
-              Signed in with {session.admin.email}. Session expires {formatDate(session.expiresAt)}.
+              Signed in with <span className="break-all">{session.admin.email}</span>. Session expires {formatDate(session.expiresAt)}.
             </p>
           </div>
-          <button className="button-secondary" type="button" onClick={() => void handleLogout()}>
+          <button className="button-secondary w-full sm:w-auto" type="button" onClick={() => void handleLogout()}>
             Sign out
           </button>
         </div>
 
         {statusMessage ? <p className="mt-4 text-sm text-emerald-300">{statusMessage}</p> : null}
 
-        <div className="mt-6 grid gap-4 md:grid-cols-3 xl:grid-cols-6">
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
           <article className="metric-card">
             <p className="metric-value">{overview.snapshot.totalLawyers}</p>
             <p className="metric-label">Lawyer profiles</p>
@@ -323,24 +328,24 @@ export function AdminConsole() {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <section className="panel p-6">
-          <div className="flex items-end justify-between gap-4">
+        <section className="panel p-5 sm:p-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-bronze">Lawyer coverage</p>
-              <h3 className="mt-3 font-display text-3xl text-sand">Current profiles on the platform</h3>
+              <h3 className="mt-3 font-display text-2xl text-sand sm:text-3xl">Current profiles on the platform</h3>
             </div>
             <p className="text-xs uppercase tracking-[0.22em] text-mist/60">Updated {formatDate(overview.generatedAt)}</p>
           </div>
 
           <div className="mt-6 space-y-4">
             {overview.lawyers.map((lawyer) => (
-              <article key={lawyer.handle} className="rounded-[1.75rem] border border-white/10 bg-white/5 p-5">
+              <article key={lawyer.handle} className="rounded-[1.75rem] border border-white/10 bg-white/5 p-4 sm:p-5">
                 <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <p className="font-display text-3xl text-sand">{lawyer.fullName}</p>
+                  <div className="min-w-0">
+                    <p className="font-display text-2xl text-sand sm:text-3xl">{lawyer.fullName}</p>
                     <p className="mt-2 text-xs uppercase tracking-[0.24em] text-bronze">{lawyer.city}</p>
                   </div>
-                  <Link href={`/lawyers/${lawyer.handle}`} className="button-secondary">
+                  <Link href={`/lawyers/${lawyer.handle}`} className="button-secondary w-full sm:w-auto">
                     Open profile
                   </Link>
                 </div>
@@ -371,17 +376,20 @@ export function AdminConsole() {
         </section>
 
         <div className="space-y-6">
-          <section className="panel p-6">
+          <section className="panel p-5 sm:p-6">
             <p className="text-xs uppercase tracking-[0.3em] text-bronze">City footprint</p>
-            <h3 className="mt-3 font-display text-3xl text-sand">Where the current directory is live</h3>
+            <h3 className="mt-3 font-display text-2xl text-sand sm:text-3xl">Where the current directory is live</h3>
             <div className="mt-6 space-y-3">
               {overview.cityCoverage.map((item) => (
-                <div key={item.city} className="flex items-center justify-between rounded-3xl border border-white/10 bg-white/5 p-4">
+                <div
+                  key={item.city}
+                  className="flex flex-col gap-3 rounded-3xl border border-white/10 bg-white/5 p-4 sm:flex-row sm:items-center sm:justify-between"
+                >
                   <div>
                     <p className="text-lg text-sand">{item.city}</p>
                     <p className="mt-1 text-xs uppercase tracking-[0.2em] text-mist/60">Directory coverage</p>
                   </div>
-                  <span className="rounded-full border border-bronze/30 px-3 py-1 text-xs text-bronze">
+                  <span className="w-fit rounded-full border border-bronze/30 px-3 py-1 text-xs text-bronze">
                     {item.lawyers} lawyer{item.lawyers === 1 ? "" : "s"}
                   </span>
                 </div>
@@ -389,9 +397,9 @@ export function AdminConsole() {
             </div>
           </section>
 
-          <section className="panel p-6">
+          <section className="panel p-5 sm:p-6">
             <p className="text-xs uppercase tracking-[0.3em] text-bronze">Practice map</p>
-            <h3 className="mt-3 font-display text-3xl text-sand">Covered segments</h3>
+            <h3 className="mt-3 font-display text-2xl text-sand sm:text-3xl">Covered segments</h3>
             <div className="mt-6 flex flex-wrap gap-3">
               {overview.practiceAreas.map((area) => (
                 <span key={area} className="tag">
@@ -401,20 +409,20 @@ export function AdminConsole() {
             </div>
           </section>
 
-          <section className="panel p-6">
+          <section className="panel p-5 sm:p-6">
             <p className="text-xs uppercase tracking-[0.3em] text-bronze">Quick actions</p>
-            <h3 className="mt-3 font-display text-3xl text-sand">Move between live surfaces</h3>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="/find-lawyers" className="button-secondary">
+            <h3 className="mt-3 font-display text-2xl text-sand sm:text-3xl">Move between live surfaces</h3>
+            <div className="mt-6 grid gap-3 sm:flex sm:flex-wrap">
+              <Link href="/find-lawyers" className="button-secondary w-full sm:w-auto">
                 Discovery
               </Link>
-              <Link href="/network" className="button-secondary">
+              <Link href="/network" className="button-secondary w-full sm:w-auto">
                 Social feed
               </Link>
-              <Link href="/messages" className="button-secondary">
+              <Link href="/messages" className="button-secondary w-full sm:w-auto">
                 Messages
               </Link>
-              <Link href="/workspace" className="button-secondary">
+              <Link href="/workspace" className="button-secondary w-full sm:w-auto">
                 Workspace
               </Link>
             </div>
@@ -423,10 +431,10 @@ export function AdminConsole() {
                 <a
                   key={route.path}
                   href={`${apiBaseUrl}${route.path.replace(":handle", overview.lawyers[0]?.handle ?? "adv-isha-reddy")}`}
-                  className="flex items-center justify-between rounded-3xl border border-white/10 bg-white/5 p-4 text-sm text-mist/80 transition hover:border-bronze/35 hover:text-sand"
+                  className="flex flex-col gap-2 rounded-3xl border border-white/10 bg-white/5 p-4 text-sm text-mist/80 transition hover:border-bronze/35 hover:text-sand sm:flex-row sm:items-center sm:justify-between"
                 >
                   <span>{route.label}</span>
-                  <span className="text-xs uppercase tracking-[0.2em] text-bronze">{route.path}</span>
+                  <span className="break-all text-xs uppercase tracking-[0.2em] text-bronze">{route.path}</span>
                 </a>
               ))}
             </div>

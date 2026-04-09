@@ -50,6 +50,12 @@ const personaInstructions: Record<AiPersona, string> = {
   "business-counsel": "You are a business-focused counsel who blends legal precision with commercialization. Focus on contracts, governance, risk allocation, and how legal choices affect business momentum."
 };
 
+const ollamaBudgets = {
+  fast: env.OLLAMA_NUM_PREDICT_FAST,
+  standard: env.OLLAMA_NUM_PREDICT,
+  deep: env.OLLAMA_NUM_PREDICT_DEEP
+} as const;
+
 const caseLawLibrary: CaseLawSuggestion[] = [
   {
     id: "case_arnesh_kumar",
@@ -358,7 +364,8 @@ export async function summarizeJudgment(payload: JudgmentSummaryRequest): Promis
       "Focus on the real procedural posture, legal issue, and practical outcome.",
       "",
       text
-    ].join("\n")
+    ].join("\n"),
+    { numPredict: ollamaBudgets.standard }
   );
 
   return {
@@ -396,7 +403,8 @@ export async function explainLegalTerm(
         "CAUTION: ..."
       ]
         .filter(Boolean)
-        .join("\n")
+        .join("\n"),
+      { numPredict: ollamaBudgets.fast }
     );
     const parsed = ollamaResponse ? parseLabelledSections(ollamaResponse) : null;
 
@@ -431,7 +439,8 @@ export async function explainLegalTerm(
       "CAUTION: ..."
     ]
       .filter(Boolean)
-      .join("\n")
+      .join("\n"),
+    { numPredict: ollamaBudgets.fast }
   );
   const parsed = ollamaResponse ? parseLabelledSections(ollamaResponse) : null;
 
@@ -505,7 +514,8 @@ export async function chatWithAi(payload: AiChatRequest): Promise<AiChatResponse
         prompt
       ]
         .filter(Boolean)
-        .join("\n")
+        .join("\n"),
+      { numPredict: ollamaBudgets.fast }
     )) || "The AI is taking longer than expected. Please retry once the connection is ready.";
 
   return {
@@ -537,7 +547,8 @@ export async function summarizeText(payload: AiSummaryRequest): Promise<AiSummar
         "Text:",
         payload.text,
         "Summary:"
-      ].join("\n")
+      ].join("\n"),
+      { numPredict: ollamaBudgets.standard }
     )) || fallbackSummary || "No summary could be generated.";
 
   const keyPoints = response
@@ -599,7 +610,8 @@ export async function matchLawyersForCase(payload: AiLawyerMatchRequest): Promis
     matches.length > 0
       ? await generateWithOllama(
         "You match cases to lawyers objectively, referencing only the provided data.",
-        narrativePrompt
+        narrativePrompt,
+        { numPredict: ollamaBudgets.standard }
       )
       : null;
 
@@ -633,7 +645,8 @@ export async function draftContentPost(
       "HEADLINE: ...",
       "BODY: ...",
       "HASHTAGS: #tag #tag"
-    ].join("\n")
+    ].join("\n"),
+    { numPredict: ollamaBudgets.deep }
   );
 
   if (!ollamaResponse) {
@@ -719,7 +732,8 @@ export async function draftLegalNotice(
       ...payload.demands.map((demand) => `- ${demand.trim()}`),
       "",
       "Return only the draft notice body."
-    ].join("\n")
+    ].join("\n"),
+    { numPredict: ollamaBudgets.deep }
   );
 
   return {
@@ -766,7 +780,9 @@ async function generateCaseLawResponse(payload: MatterResearchRequest): Promise<
     "Limit to four entries and avoid invented case names."
   ].join("\n");
 
-  const ollamaResponse = await generateWithOllama("Case-law research assistant", prompt);
+  const ollamaResponse = await generateWithOllama("Case-law research assistant", prompt, {
+    numPredict: ollamaBudgets.standard
+  });
   const parsed = safeJsonParse<GeneratedCaseLawResponse>(ollamaResponse);
 
   if (!parsed?.suggestions?.length) {
@@ -810,7 +826,9 @@ async function generateSectionResponse(payload: MatterResearchRequest): Promise<
     "Limit to five entries and stay grounded in readable legal language."
   ].join("\n");
 
-  const ollamaResponse = await generateWithOllama("Section suggestion assistant", prompt);
+  const ollamaResponse = await generateWithOllama("Section suggestion assistant", prompt, {
+    numPredict: ollamaBudgets.standard
+  });
   const parsed = safeJsonParse<GeneratedSectionResponse>(ollamaResponse);
 
   if (!parsed?.suggestions?.length) {
