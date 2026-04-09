@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 
 import { apiBaseUrl } from "./api-base-url";
 import { clearAdminSessionToken, readAdminSessionToken, writeAdminSessionToken } from "./admin-session";
@@ -77,6 +77,7 @@ export function AdminConsole() {
   const [overview, setOverview] = useState<AdminOverviewPayload | null>(null);
   const [isBootstrapping, setIsBootstrapping] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
 
@@ -151,7 +152,9 @@ export function AdminConsole() {
     }));
   }
 
-  async function handleLogin() {
+  async function handleLogin(event?: FormEvent<HTMLFormElement>) {
+    event?.preventDefault();
+
     if (!credentials.email.trim() || !credentials.password) {
       setErrorMessage("Enter the admin email and password.");
       setStatusMessage("");
@@ -191,6 +194,31 @@ export function AdminConsole() {
     }
   }
 
+  async function handleRefresh() {
+    const token = readAdminSessionToken();
+
+    if (!token) {
+      setErrorMessage("Sign in again to refresh the dashboard.");
+      setStatusMessage("");
+      return;
+    }
+
+    setIsRefreshing(true);
+
+    try {
+      await hydrateAdmin(token, "Dashboard refreshed.");
+    } catch (error) {
+      console.error("Failed to refresh admin dashboard.", error);
+      clearAdminSessionToken();
+      setSession(null);
+      setOverview(null);
+      setErrorMessage(error instanceof Error ? error.message : "Dashboard refresh failed.");
+      setStatusMessage("");
+    } finally {
+      setIsRefreshing(false);
+    }
+  }
+
   async function handleLogout() {
     const token = readAdminSessionToken();
 
@@ -225,7 +253,7 @@ export function AdminConsole() {
 
   if (!session || !overview) {
     return (
-      <div className="panel p-5 sm:p-6">
+      <form className="panel p-5 sm:p-6" onSubmit={(event) => void handleLogin(event)}>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-bronze">Admin login</p>
@@ -238,6 +266,7 @@ export function AdminConsole() {
           This prototype admin flow now checks credentials against the API, restores a saved session, and blocks the
           dashboard until authentication succeeds.
         </p>
+        <p className="mt-3 text-sm text-mist/60">The demo admin email and password are already filled in below.</p>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <label className="field">
@@ -267,8 +296,7 @@ export function AdminConsole() {
         <div className="mt-6 grid gap-3 sm:flex sm:flex-wrap">
           <button
             className="button-primary w-full sm:w-auto"
-            type="button"
-            onClick={() => void handleLogin()}
+            type="submit"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Signing in..." : "Sign in as admin"}
@@ -277,7 +305,7 @@ export function AdminConsole() {
             Return to website
           </Link>
         </div>
-      </div>
+      </form>
     );
   }
 
@@ -292,9 +320,14 @@ export function AdminConsole() {
               Signed in with <span className="break-all">{session.admin.email}</span>. Session expires {formatDate(session.expiresAt)}.
             </p>
           </div>
-          <button className="button-secondary w-full sm:w-auto" type="button" onClick={() => void handleLogout()}>
-            Sign out
-          </button>
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+            <button className="button-secondary w-full sm:w-auto" type="button" onClick={() => void handleRefresh()} disabled={isRefreshing}>
+              {isRefreshing ? "Refreshing..." : "Refresh dashboard"}
+            </button>
+            <button className="button-secondary w-full sm:w-auto" type="button" onClick={() => void handleLogout()}>
+              Sign out
+            </button>
+          </div>
         </div>
 
         {statusMessage ? <p className="mt-4 text-sm text-emerald-300">{statusMessage}</p> : null}
@@ -427,10 +460,13 @@ export function AdminConsole() {
               </Link>
             </div>
             <div className="mt-6 space-y-3">
+              <p className="text-xs uppercase tracking-[0.22em] text-mist/60">API endpoints</p>
               {overview.routes.map((route) => (
                 <a
                   key={route.path}
                   href={`${apiBaseUrl}${route.path.replace(":handle", overview.lawyers[0]?.handle ?? "adv-isha-reddy")}`}
+                  target="_blank"
+                  rel="noreferrer"
                   className="flex flex-col gap-2 rounded-3xl border border-white/10 bg-white/5 p-4 text-sm text-mist/80 transition hover:border-bronze/35 hover:text-sand sm:flex-row sm:items-center sm:justify-between"
                 >
                   <span>{route.label}</span>

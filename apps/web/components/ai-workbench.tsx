@@ -71,67 +71,106 @@ const signalChain = [
   }
 ];
 
+const defaultResearchQuery = "Urgent criminal complaint and anticipatory bail strategy";
+const defaultJudgmentTitle = "Prototype judgment intake";
+const defaultJudgmentText =
+  "The petitioner sought urgent relief after coercive steps were threatened despite incomplete procedural safeguards. The court examined liberty concerns, the chronology of events, and whether the state action could continue without closer scrutiny. It held that procedural discipline mattered and interim protection was justified while the matter was examined further.";
+const defaultTerm = "anticipatory bail";
+const defaultPostTopic = "Urgent complaint response checklist";
+const defaultPostAudience = "founders and first-time private clients";
+const defaultNoticeRecipient = "Counterparty / Respondent";
+const defaultNoticeType = "Breach of contract";
+const defaultNoticeSummary =
+  "The recipient failed to perform contractual obligations despite prior follow-up and caused commercial prejudice.";
+const defaultNoticeDemands =
+  "Cease the breach immediately\nCure the default within 7 days\nConfirm compliance in writing";
+const defaultChatGreeting: AiChatMessage = {
+  role: "assistant",
+  content:
+    "Hi there! Tell me about your legal problem or ask for a summary, a persona-guided insight, or lawyer matching."
+};
+const defaultChatPrompt =
+  "Explain the safest immediate steps when a client fears arrest after a business dispute complaint.";
+const defaultSummaryInput =
+  "The client fears arrest after a heated business dispute in Bengaluru. The complaint mentions breach of trust and misappropriation of funds linked to a short-term joint venture.";
+const defaultMatchCaseSummary =
+  "A founder shares a matter involving a breach-of-promissory note dispute tied to property shading, plus an imminent hearing scheduled in the coming 10 days.";
+const defaultMatchCity = "Hyderabad";
+const defaultMatchUrgency = "Urgent: need pretrial protection and rapid guidance.";
+const defaultMatchGoals = "Lock in anticipatory bail strategy while keeping the dispute confidential.";
+
+const quickStartGuides = [
+  {
+    id: "research-grid",
+    step: "01",
+    title: "Analyze the matter",
+    body: "Paste the issue, choose a practice area, and run legal research."
+  },
+  {
+    id: "interpretation-lab",
+    step: "02",
+    title: "Summarize or explain",
+    body: "Turn long text into a short brief or explain a legal term in plain language."
+  },
+  {
+    id: "drafting-deck",
+    step: "03",
+    title: "Draft output",
+    body: "Generate a post or legal notice with the deeper drafting lane."
+  },
+  {
+    id: "counsel-console",
+    step: "04",
+    title: "Ask and route",
+    body: "Chat with the assistant, compress intake, and match the right lawyer."
+  }
+];
+
 export function AiWorkbench() {
   const [overview, setOverview] = useState<AiOverviewResponse | null>(null);
   const [lawyers, setLawyers] = useState<LawyerProfileSummary[]>([]);
-  const [query, setQuery] = useState("Urgent criminal complaint and anticipatory bail strategy");
+  const [query, setQuery] = useState(defaultResearchQuery);
   const [practiceArea, setPracticeArea] = useState<PracticeArea>("Criminal Law");
   const [caseLaw, setCaseLaw] = useState<CaseLawSuggestionResponse | null>(null);
   const [sections, setSections] = useState<LegalSectionSuggestionResponse | null>(null);
-  const [judgmentTitle, setJudgmentTitle] = useState("Prototype judgment intake");
-  const [judgmentText, setJudgmentText] = useState(
-    "The petitioner sought urgent relief after coercive steps were threatened despite incomplete procedural safeguards. The court examined liberty concerns, the chronology of events, and whether the state action could continue without closer scrutiny. It held that procedural discipline mattered and interim protection was justified while the matter was examined further."
-  );
+  const [judgmentTitle, setJudgmentTitle] = useState(defaultJudgmentTitle);
+  const [judgmentText, setJudgmentText] = useState(defaultJudgmentText);
   const [judgmentSummary, setJudgmentSummary] = useState<JudgmentSummaryResponse | null>(null);
-  const [term, setTerm] = useState("anticipatory bail");
+  const [term, setTerm] = useState(defaultTerm);
   const [termExplanation, setTermExplanation] = useState<LegalTermExplanationResponse | null>(null);
   const [insights, setInsights] = useState<DiscussionInsightResponse | null>(null);
   const [postDraft, setPostDraft] = useState<AiPostGenerationResponse | null>(null);
   const [noticeDraft, setNoticeDraft] = useState<LegalNoticeDraftResponse | null>(null);
   const [postAuthor, setPostAuthor] = useState("");
   const [noticeAuthor, setNoticeAuthor] = useState("");
-  const [postTopic, setPostTopic] = useState("Urgent complaint response checklist");
-  const [postAudience, setPostAudience] = useState("founders and first-time private clients");
+  const [postTopic, setPostTopic] = useState(defaultPostTopic);
+  const [postAudience, setPostAudience] = useState(defaultPostAudience);
   const [postTone, setPostTone] = useState<"authoritative" | "approachable" | "urgent" | "educational">("educational");
   const [postFormat, setPostFormat] = useState<"post" | "thread" | "video-script">("thread");
-  const [noticeRecipient, setNoticeRecipient] = useState("Counterparty / Respondent");
-  const [noticeType, setNoticeType] = useState("Breach of contract");
-  const [noticeSummary, setNoticeSummary] = useState(
-    "The recipient failed to perform contractual obligations despite prior follow-up and caused commercial prejudice."
-  );
-  const [noticeDemands, setNoticeDemands] = useState(
-    "Cease the breach immediately\nCure the default within 7 days\nConfirm compliance in writing"
-  );
+  const [noticeRecipient, setNoticeRecipient] = useState(defaultNoticeRecipient);
+  const [noticeType, setNoticeType] = useState(defaultNoticeType);
+  const [noticeSummary, setNoticeSummary] = useState(defaultNoticeSummary);
+  const [noticeDemands, setNoticeDemands] = useState(defaultNoticeDemands);
   const [noticeTone, setNoticeTone] = useState<"firm" | "measured" | "urgent">("firm");
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState("");
   const [noticeMessage, setNoticeMessage] = useState("");
-  const [chatHistory, setChatHistory] = useState<AiChatMessage[]>([
-    {
-      role: "assistant",
-      content:
-        "Hi there! Tell me about your legal problem or ask for a summary, a persona-guided insight, or lawyer matching."
-    }
-  ]);
+  const [chatHistory, setChatHistory] = useState<AiChatMessage[]>([defaultChatGreeting]);
   const [chatInput, setChatInput] = useState("");
   const [chatPersona, setChatPersona] = useState<AiPersona>("client-advocate");
   const [chatLoading, setChatLoading] = useState(false);
   const [chatError, setChatError] = useState("");
-  const [summaryInput, setSummaryInput] = useState(
-    "The client fears arrest after a heated business dispute in Bengaluru. The complaint mentions breach of trust and misappropriation of funds linked to a short-term joint venture."
-  );
+  const [summaryInput, setSummaryInput] = useState(defaultSummaryInput);
   const [summaryLength, setSummaryLength] = useState<AiSummaryLength>("medium");
   const [summaryResult, setSummaryResult] = useState<AiSummaryResponse | null>(null);
   const [summaryLoading, setSummaryLoading] = useState(false);
   const [summaryError, setSummaryError] = useState("");
-  const [matchCaseSummary, setMatchCaseSummary] = useState(
-    "A founder shares a matter involving a breach-of-promissory note dispute tied to property shading, plus an imminent hearing scheduled in the coming 10 days."
-  );
+  const [matchCaseSummary, setMatchCaseSummary] = useState(defaultMatchCaseSummary);
   const [matchPracticeArea, setMatchPracticeArea] = useState<PracticeArea>("Criminal Law");
-  const [matchCity, setMatchCity] = useState("Hyderabad");
-  const [matchUrgency, setMatchUrgency] = useState("Urgent: need pretrial protection and rapid guidance.");
-  const [matchGoals, setMatchGoals] = useState("Lock in anticipatory bail strategy while keeping the dispute confidential.");
+  const [matchCity, setMatchCity] = useState(defaultMatchCity);
+  const [matchUrgency, setMatchUrgency] = useState(defaultMatchUrgency);
+  const [matchGoals, setMatchGoals] = useState(defaultMatchGoals);
   const [matchResult, setMatchResult] = useState<AiLawyerMatchResponse | null>(null);
   const [matchLoading, setMatchLoading] = useState(false);
   const [matchError, setMatchError] = useState("");
@@ -168,6 +207,90 @@ export function AiWorkbench() {
 
     void loadContext();
   }, []);
+
+  function loadResearchDemo() {
+    setQuery(defaultResearchQuery);
+    setPracticeArea("Criminal Law");
+    setErrorMessage("");
+    setNoticeMessage("Demo matter loaded.");
+  }
+
+  function clearResearchOutput() {
+    setCaseLaw(null);
+    setSections(null);
+    setErrorMessage("");
+    setNoticeMessage("Research output cleared.");
+  }
+
+  function loadInterpretationDemo() {
+    setJudgmentTitle(defaultJudgmentTitle);
+    setJudgmentText(defaultJudgmentText);
+    setTerm(defaultTerm);
+    setErrorMessage("");
+    setNoticeMessage("Interpretation demo loaded.");
+  }
+
+  function clearInterpretationOutput() {
+    setJudgmentSummary(null);
+    setTermExplanation(null);
+    setErrorMessage("");
+    setNoticeMessage("Interpretation output cleared.");
+  }
+
+  function clearPostOutput() {
+    setPostDraft(null);
+    setErrorMessage("");
+    setNoticeMessage("Post draft cleared.");
+  }
+
+  function clearNoticeOutput() {
+    setNoticeDraft(null);
+    setErrorMessage("");
+    setNoticeMessage("Notice draft cleared.");
+  }
+
+  function loadChatDemo() {
+    setChatPersona("client-advocate");
+    setChatInput(defaultChatPrompt);
+    setChatError("");
+    setNoticeMessage("Demo question loaded into chat.");
+  }
+
+  function resetChat() {
+    setChatHistory([defaultChatGreeting]);
+    setChatInput("");
+    setChatError("");
+    setNoticeMessage("Chat reset.");
+  }
+
+  function loadSummaryDemo() {
+    setSummaryInput(defaultSummaryInput);
+    setSummaryLength("medium");
+    setSummaryError("");
+    setNoticeMessage("Summary example loaded.");
+  }
+
+  function clearSummaryOutput() {
+    setSummaryResult(null);
+    setSummaryError("");
+    setNoticeMessage("Summary output cleared.");
+  }
+
+  function loadMatchDemo() {
+    setMatchCaseSummary(defaultMatchCaseSummary);
+    setMatchPracticeArea("Criminal Law");
+    setMatchCity(defaultMatchCity);
+    setMatchUrgency(defaultMatchUrgency);
+    setMatchGoals(defaultMatchGoals);
+    setMatchError("");
+    setNoticeMessage("Lawyer-match demo loaded.");
+  }
+
+  function clearMatchOutput() {
+    setMatchResult(null);
+    setMatchError("");
+    setNoticeMessage("Lawyer-match output cleared.");
+  }
 
   async function runResearch(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -451,6 +574,8 @@ export function AiWorkbench() {
       note: "Reasoned recommendations"
     }
   ];
+  const activePersona = personaOptions.find((persona) => persona.id === chatPersona) ?? personaOptions[0];
+  const hasLawyerProfiles = lawyers.length > 0;
 
   if (loading) {
     return (
@@ -462,7 +587,7 @@ export function AiWorkbench() {
         </div>
         <div className="mx-auto max-w-7xl">
           <div className="panel neon-panel p-8">
-            <p className="text-sm text-mist/75">Loading the pro model cockpit...</p>
+            <p className="text-sm text-mist/75">Loading the AI workbench...</p>
           </div>
         </div>
       </main>
@@ -482,31 +607,48 @@ export function AiWorkbench() {
           <div className="grid gap-8 xl:grid-cols-[1.08fr_0.92fr]">
             <div>
               <div className="flex flex-wrap gap-3">
-                <span className="status-pill">Futuristic UI</span>
-                <span className="status-pill">Voice to LLaMA flow</span>
-                <span className="status-pill">Local GPU ready</span>
+                <span className="status-pill">Clean pro UI</span>
+                <span className="status-pill">Local LLaMA lane</span>
+                <span className="status-pill">Research + drafting</span>
               </div>
-              <p className="eyebrow mt-6">Pro model cockpit</p>
+              <p className="eyebrow mt-6">AI workbench</p>
               <h1 className="mt-4 max-w-5xl font-display text-5xl leading-[0.93] text-sand sm:text-6xl lg:text-7xl">
-                A premium legal AI control room for voice intake, live research, and private local reasoning.
+                One clear screen to research, explain, draft, and route legal work.
               </h1>
               <p className="mt-6 max-w-3xl text-base leading-8 text-mist/80 sm:text-lg">
-                This surface is designed like an operator console instead of a plain dashboard, so voice capture,
-                retrieval, local inference, and spoken/text responses feel like one professional system.
+                Start with the matter summary, move into explanation or drafting, and finish with chat or lawyer
+                matching. Each section is grouped by task so first-time users can understand what to do next.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <a href="#research-grid" className="button-primary">
-                  Enter research grid
+                  Start with research
+                </a>
+                <a href="#interpretation-lab" className="button-secondary">
+                  Explain or summarize
+                </a>
+                <a href="#drafting-deck" className="button-secondary">
+                  Open drafting
                 </a>
                 <a href="#counsel-console" className="button-secondary">
-                  Open counsel console
+                  Ask AI and match lawyer
                 </a>
-                <Link href="/creator-studio" className="button-secondary">
-                  Creator studio
-                </Link>
                 <Link href="/messages" className="button-secondary">
-                  Message center
+                  Open messages
                 </Link>
+              </div>
+              <div className="mt-8 grid gap-4 md:grid-cols-2">
+                {quickStartGuides.map((guide) => (
+                  <a key={guide.id} href={`#${guide.id}`} className="feature-card">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="text-xs uppercase tracking-[0.28em] text-bronze">Step {guide.step}</p>
+                      <span className="rounded-full border border-white/10 px-3 py-1 text-[0.65rem] uppercase tracking-[0.24em] text-mist/65">
+                        Open section
+                      </span>
+                    </div>
+                    <p className="mt-4 font-display text-2xl text-sand">{guide.title}</p>
+                    <p className="mt-3 text-sm leading-7 text-mist/78">{guide.body}</p>
+                  </a>
+                ))}
               </div>
               <div className="mt-10 grid gap-4 md:grid-cols-3">
                 {heroMetrics.map((item) => (
@@ -564,10 +706,10 @@ export function AiWorkbench() {
 
           <div className="mt-8 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
             <div className="console-card">
-              <p className="text-xs uppercase tracking-[0.28em] text-[#98ecff]/80">Target signal chain</p>
+              <p className="text-xs uppercase tracking-[0.28em] text-[#98ecff]/80">How to use this screen</p>
               <p className="mt-4 text-sm leading-7 text-mist/75">
-                The workbench now makes the intended speech, retrieval, model, and response flow explicit so the UI
-                reads like a serious local AI system rather than a stack of disconnected forms.
+                Use the sections in order when you want a full workflow: research the issue, explain or summarize the
+                material, generate a draft, then use chat or lawyer matching to close the loop.
               </p>
               <div className="mt-5 flex flex-wrap gap-2">
                 {(overview?.recommendedWorkflows ?? []).map((workflow) => (
@@ -611,16 +753,32 @@ export function AiWorkbench() {
             <div>
               <p className="eyebrow">Research grid</p>
               <h2 className="mt-3 max-w-3xl font-display text-4xl leading-tight text-sand sm:text-5xl">
-                Run matter analysis inside a cleaner command surface.
+                Start here when you need the laws, cases, and context around a matter.
               </h2>
             </div>
             <p className="max-w-2xl text-sm leading-7 text-mist/72">
-              Intake, case-law surfacing, section mapping, and output review now sit under one clear operational layer.
+              Paste the issue, pick the practice area, then run research. The right side fills with suggested cases and
+              legal sections.
             </p>
           </div>
           <div className="grid gap-6 xl:grid-cols-2">
           <form className="panel p-6" onSubmit={runResearch}>
-            <p className="text-xs uppercase tracking-[0.28em] text-bronze">Matter research</p>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-xs uppercase tracking-[0.28em] text-bronze">Matter research</p>
+                <p className="mt-3 max-w-xl text-sm leading-7 text-mist/72">
+                  Best for first-pass analysis before you move into drafting or chat.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button className="button-secondary" type="button" onClick={loadResearchDemo}>
+                  Use demo matter
+                </button>
+                <button className="button-secondary" type="button" onClick={clearResearchOutput}>
+                  Clear output
+                </button>
+              </div>
+            </div>
             <label className="field mt-5">
               <span>Matter summary</span>
               <textarea rows={4} value={query} onChange={(event) => setQuery(event.target.value)} required />
@@ -641,7 +799,17 @@ export function AiWorkbench() {
           </form>
 
           <section className="panel p-6">
-            <p className="text-xs uppercase tracking-[0.28em] text-bronze">Research output</p>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-xs uppercase tracking-[0.28em] text-bronze">Research output</p>
+                <p className="mt-3 text-sm leading-7 text-mist/72">
+                  Review the suggested cases and sections, then jump to chat or drafting with the same issue.
+                </p>
+              </div>
+              <a href="#counsel-console" className="button-secondary">
+                Continue to chat
+              </a>
+            </div>
             <div className="mt-5 grid gap-4">
               {caseLaw?.suggestions.map((item) => (
                 <div key={item.id} className="rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
@@ -666,21 +834,36 @@ export function AiWorkbench() {
           </div>
         </section>
 
-        <section className="mt-12">
+        <section id="interpretation-lab" className="mt-12">
           <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="eyebrow">Interpretation lab</p>
               <h2 className="mt-3 max-w-3xl font-display text-4xl leading-tight text-sand sm:text-5xl">
-                Summaries, explanations, and insight refresh belong in one analysis bay.
+                Use this area to turn complex text into something a lawyer or client can read quickly.
               </h2>
             </div>
             <p className="max-w-2xl text-sm leading-7 text-mist/72">
-              This section keeps judgment compression, legal term translation, and discussion insight review tightly grouped.
+              Summarize orders, explain terms in plain language, and refresh discussion insights without leaving the page.
             </p>
           </div>
           <div className="grid gap-6 xl:grid-cols-[0.58fr_0.42fr]">
             <form className="panel p-6" onSubmit={runJudgmentSummary}>
-            <p className="text-xs uppercase tracking-[0.28em] text-bronze">Judgment summarizer</p>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-xs uppercase tracking-[0.28em] text-bronze">Judgment summarizer</p>
+                <p className="mt-3 text-sm leading-7 text-mist/72">
+                  Paste a long order or extract and generate a shorter brief with issues.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button className="button-secondary" type="button" onClick={loadInterpretationDemo}>
+                  Load sample
+                </button>
+                <button className="button-secondary" type="button" onClick={clearInterpretationOutput}>
+                  Clear output
+                </button>
+              </div>
+            </div>
             <label className="field mt-5">
               <span>Title</span>
               <input value={judgmentTitle} onChange={(event) => setJudgmentTitle(event.target.value)} required />
@@ -708,7 +891,17 @@ export function AiWorkbench() {
 
           <div className="space-y-6">
             <form className="panel p-6" onSubmit={runTermExplain}>
-              <p className="text-xs uppercase tracking-[0.28em] text-bronze">Explain legal term</p>
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.28em] text-bronze">Explain legal term</p>
+                  <p className="mt-3 text-sm leading-7 text-mist/72">
+                    Use this when you need a simple explanation for a client or intake team member.
+                  </p>
+                </div>
+                <button className="button-secondary" type="button" onClick={loadInterpretationDemo}>
+                  Load sample
+                </button>
+              </div>
               <label className="field mt-5">
                 <span>Term</span>
                 <input value={term} onChange={(event) => setTerm(event.target.value)} required />
@@ -738,35 +931,49 @@ export function AiWorkbench() {
                     <p className="mt-3 text-sm leading-7 text-mist/80">{item.insight}</p>
                   </div>
                 ))}
+                {!insights?.insights.length ? <p className="text-sm text-mist/70">Refresh to load the latest insights.</p> : null}
               </div>
             </section>
           </div>
           </div>
         </section>
 
-        <section className="mt-12">
+        <section id="drafting-deck" className="mt-12">
           <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="eyebrow">Drafting deck</p>
               <h2 className="mt-3 max-w-3xl font-display text-4xl leading-tight text-sand sm:text-5xl">
-                Content generation and legal drafting feel like dedicated production modules.
+                Generate polished drafts once the facts and research are clear.
               </h2>
             </div>
             <p className="max-w-2xl text-sm leading-7 text-mist/72">
-              Publishing flows and notice generation now read like pro tooling instead of generic utility forms, with a
-              deeper local model budget reserved for longer-form output.
+              This section handles client-facing content and longer legal drafting. It works best after the research and
+              explanation steps above.
             </p>
           </div>
           <div className="grid gap-6 xl:grid-cols-2">
             <form className="panel p-6" onSubmit={runPostDraft}>
-            <p className="text-xs uppercase tracking-[0.28em] text-bronze">AI post assistant</p>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-xs uppercase tracking-[0.28em] text-bronze">AI post assistant</p>
+                <p className="mt-3 text-sm leading-7 text-mist/72">
+                  Draft a clear public-facing post for legal education, awareness, or marketing.
+                </p>
+              </div>
+              <button className="button-secondary" type="button" onClick={clearPostOutput}>
+                Clear draft
+              </button>
+            </div>
             <div className="mt-3 flex flex-wrap gap-2">
               <span className="status-pill">Extended lane</span>
               <span className="status-pill">Deeper draft budget</span>
             </div>
+            {!hasLawyerProfiles ? (
+              <p className="mt-4 text-sm text-mist/70">Load lawyer profiles first so the assistant can attribute the draft.</p>
+            ) : null}
             <label className="field mt-5">
               <span>Author</span>
-              <select value={postAuthor} onChange={(event) => setPostAuthor(event.target.value)}>
+              <select value={postAuthor} onChange={(event) => setPostAuthor(event.target.value)} disabled={!hasLawyerProfiles}>
                 {lawyers.map((lawyer) => (
                   <option key={lawyer.handle} value={lawyer.handle}>
                     {lawyer.fullName}
@@ -801,7 +1008,7 @@ export function AiWorkbench() {
                 </select>
               </label>
             </div>
-            <button className="button-primary mt-6" type="submit" disabled={busy === "post"}>
+            <button className="button-primary mt-6" type="submit" disabled={busy === "post" || !hasLawyerProfiles}>
               {busy === "post" ? "Generating..." : "Generate post draft"}
             </button>
             {postDraft ? (
@@ -823,14 +1030,27 @@ export function AiWorkbench() {
           </form>
 
           <form className="panel p-6" onSubmit={runNoticeDraft}>
-            <p className="text-xs uppercase tracking-[0.28em] text-bronze">AI legal notice assistant</p>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-xs uppercase tracking-[0.28em] text-bronze">AI legal notice assistant</p>
+                <p className="mt-3 text-sm leading-7 text-mist/72">
+                  Draft a structured notice once you know the recipient, issue, and demands.
+                </p>
+              </div>
+              <button className="button-secondary" type="button" onClick={clearNoticeOutput}>
+                Clear draft
+              </button>
+            </div>
             <div className="mt-3 flex flex-wrap gap-2">
               <span className="status-pill">Extended lane</span>
               <span className="status-pill">Long-form notice mode</span>
             </div>
+            {!hasLawyerProfiles ? (
+              <p className="mt-4 text-sm text-mist/70">Load lawyer profiles first so the notice can be attributed correctly.</p>
+            ) : null}
             <label className="field mt-5">
               <span>Author</span>
-              <select value={noticeAuthor} onChange={(event) => setNoticeAuthor(event.target.value)}>
+              <select value={noticeAuthor} onChange={(event) => setNoticeAuthor(event.target.value)} disabled={!hasLawyerProfiles}>
                 {lawyers.map((lawyer) => (
                   <option key={`notice-${lawyer.handle}`} value={lawyer.handle}>
                     {lawyer.fullName}
@@ -862,7 +1082,7 @@ export function AiWorkbench() {
                 <option value="urgent">Urgent</option>
               </select>
             </label>
-            <button className="button-primary mt-6" type="submit" disabled={busy === "notice"}>
+            <button className="button-primary mt-6" type="submit" disabled={busy === "notice" || !hasLawyerProfiles}>
               {busy === "notice" ? "Drafting..." : "Draft legal notice"}
             </button>
             {noticeDraft ? (
@@ -879,20 +1099,31 @@ export function AiWorkbench() {
             <div>
               <p className="eyebrow">Counsel console</p>
               <h2 className="mt-3 max-w-3xl font-display text-4xl leading-tight text-sand sm:text-5xl">
-                Advice, summarization, and lawyer matching close the loop in the final decision layer.
+                Ask follow-up questions, compress intake, and route the matter to the right lawyer.
               </h2>
             </div>
             <p className="max-w-2xl text-sm leading-7 text-mist/72">
-              Once research is ready, the interface shifts into chat, client-ready compression, and professional routing.
+              This is the final action layer. Use it when you want practical guidance or a recommended lawyer shortlist.
             </p>
           </div>
           <div className="grid gap-6 lg:grid-cols-[0.62fr_0.38fr]">
             <form className="panel p-6" onSubmit={runChat}>
-            <p className="text-xs uppercase tracking-[0.28em] text-bronze">Conversational assistant</p>
-            <p className="mt-3 text-sm leading-7 text-mist/70">
-              Switch personas, share your case details, and let the assistant answer follow-up questions in the faster
-              local-response lane.
-            </p>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-xs uppercase tracking-[0.28em] text-bronze">Conversational assistant</p>
+                <p className="mt-3 text-sm leading-7 text-mist/70">
+                  Switch personas, share the matter, and ask follow-up questions in the faster response lane.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button className="button-secondary" type="button" onClick={loadChatDemo}>
+                  Load demo question
+                </button>
+                <button className="button-secondary" type="button" onClick={resetChat}>
+                  Clear chat
+                </button>
+              </div>
+            </div>
             <div className="mt-3 flex flex-wrap gap-2">
               <span className="status-pill">Fast lane</span>
               <span className="status-pill">Lower latency chat</span>
@@ -913,6 +1144,7 @@ export function AiWorkbench() {
                 </button>
               ))}
             </div>
+            <p className="mt-4 text-sm leading-7 text-mist/72">{activePersona.description}</p>
             <div className="mt-5 space-y-3 overflow-y-auto rounded-[1.5rem] border border-white/10 bg-white/5 p-4 text-sm leading-7 text-mist/80 max-h-60">
               {chatHistory.map((message, index) => (
                 <div key={`${message.role}-${index}`} className="rounded-2xl border border-white/5 bg-ink/40 p-4">
@@ -941,7 +1173,22 @@ export function AiWorkbench() {
 
           <div className="space-y-6">
             <form className="panel p-6" onSubmit={runSummary}>
-              <p className="text-xs uppercase tracking-[0.28em] text-bronze">Case summarizer</p>
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.28em] text-bronze">Case summarizer</p>
+                  <p className="mt-3 text-sm leading-7 text-mist/72">
+                    Convert a long intake note into a short internal summary or client-ready brief.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button className="button-secondary" type="button" onClick={loadSummaryDemo}>
+                    Load sample
+                  </button>
+                  <button className="button-secondary" type="button" onClick={clearSummaryOutput}>
+                    Clear output
+                  </button>
+                </div>
+              </div>
               <label className="field mt-5">
                 <span>Client intake text</span>
                 <textarea rows={5} value={summaryInput} onChange={(event) => setSummaryInput(event.target.value)} required />
@@ -975,7 +1222,22 @@ export function AiWorkbench() {
             </form>
 
             <form className="panel p-6" onSubmit={runMatch}>
-              <p className="text-xs uppercase tracking-[0.28em] text-bronze">Lawyer match finder</p>
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.28em] text-bronze">Lawyer match finder</p>
+                  <p className="mt-3 text-sm leading-7 text-mist/72">
+                    Use the case facts, urgency, and location to narrow the right lawyer fit.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button className="button-secondary" type="button" onClick={loadMatchDemo}>
+                    Load sample
+                  </button>
+                  <button className="button-secondary" type="button" onClick={clearMatchOutput}>
+                    Clear output
+                  </button>
+                </div>
+              </div>
               <label className="field mt-5">
                 <span>Case summary</span>
                 <textarea rows={4} value={matchCaseSummary} onChange={(event) => setMatchCaseSummary(event.target.value)} required />
@@ -1026,6 +1288,14 @@ export function AiWorkbench() {
                             {match.profile.practiceAreas.join(", ")} | {match.profile.responseTimeLabel}
                           </p>
                           <p className="mt-3 text-sm leading-7 text-mist/80">{match.reason}</p>
+                          <div className="mt-4 flex flex-wrap gap-3">
+                            <Link href={`/lawyers/${match.profile.handle}`} className="button-secondary">
+                              View profile
+                            </Link>
+                            <Link href={`/consultations/${match.profile.handle}`} className="button-secondary">
+                              Book consultation
+                            </Link>
+                          </div>
                         </article>
                       ))}
                     </div>

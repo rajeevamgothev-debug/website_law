@@ -2,45 +2,90 @@ import Link from "next/link";
 
 import { featuredLawyers } from "../components/mock-data";
 
-const platformSignals = [
-  "Identity pages with custom-domain readiness",
-  "Search metadata structured for local SEO and lead routing",
-  "Consultation booking, payment placeholders, and trust signals designed into the profile surface",
-  "Social feed, follow graph, short-video surfaces, and AI-assisted creator tools now wired into the product",
-  "Phase 4 communication stack with inbox, call rooms, groups, file sharing, and lawyer referrals",
-  "Phase 5 AI layer for research suggestions, judgment summaries, term explanations, insights, and drafting",
-  "Phase 6 workspace with case tracking, document storage, invoices, analytics, and local Ollama-backed workflow support"
+const primaryFlows = [
+  {
+    title: "Find a lawyer",
+    body: "Search by city, practice area, and profile strength when a client needs the right counsel quickly.",
+    href: "/find-lawyers",
+    cta: "Open search"
+  },
+  {
+    title: "Use the AI workbench",
+    body: "Ask legal questions, summarize matters, draft output, and match the right lawyer from one screen.",
+    href: "/ai-workbench",
+    cta: "Open AI"
+  },
+  {
+    title: "Run daily work",
+    body: "Move from research into cases, notes, documents, and invoices without leaving the product.",
+    href: "/workspace",
+    cta: "Open workspace"
+  },
+  {
+    title: "Manage the platform",
+    body: "Open the protected admin surface for session-based access, metrics, and route coverage.",
+    href: "/admin",
+    cta: "Open admin"
+  }
 ];
 
-const mvpTracks = [
+const productSignals = [
   {
-    title: "Identity Engine",
-    body: "Every lawyer gets a profile that behaves like a polished personal website, not a generic directory listing."
+    value: "06",
+    label: "core modules",
+    note: "Onboarding, discovery, network, messages, AI, and workspace are live."
   },
   {
-    title: "Discovery Layer",
-    body: "Search-ready cards, city metadata, and practice tagging form the base for future client acquisition."
+    value: "36",
+    label: "routes and APIs",
+    note: "The app now spans public pages, action surfaces, and backend integrations."
   },
   {
-    title: "Trust Framework",
-    body: "Ratings, achievements, visibility controls, and verification hooks are part of the core model from day one."
+    value: "Local",
+    label: "AI option",
+    note: "The platform can route legal AI requests through your Ollama-backed local model."
   },
   {
-    title: "Social Branding",
-    body: "Lawyers can now build audience with posts, reels-style legal tips, and AI-assisted content publishing."
-  },
-  {
-    title: "Communication Layer",
-    body: "The platform now supports live messaging, call-room setup, practice groups, and referral coordination."
-  },
-  {
-    title: "AI Intelligence",
-    body: "A local-first legal workbench now handles research direction, summaries, explanations, and drafting."
-  },
-  {
-    title: "Professional Tools",
-    body: "Cases, documents, invoices, and analytics now make the product part of the daily workflow."
+    value: "Clear",
+    label: "navigation",
+    note: "Each major task now has a direct entry point instead of a crowded dashboard feel."
   }
+];
+
+const productPillars = [
+  {
+    title: "Profiles",
+    body: "Lawyer pages feel like branded legal websites instead of thin directory listings."
+  },
+  {
+    title: "Discovery",
+    body: "Search and city routing help clients reach relevant lawyers with less friction."
+  },
+  {
+    title: "Social",
+    body: "Posts, reels-style sharing, and creator tools support legal audience building."
+  },
+  {
+    title: "Communication",
+    body: "Messages, calls, groups, and referrals keep the platform useful after discovery."
+  },
+  {
+    title: "AI",
+    body: "Research, summaries, explanations, drafting, and lawyer matching sit in one workbench."
+  },
+  {
+    title: "Workspace",
+    body: "Cases, documents, invoices, and notes make the product part of daily legal work."
+  }
+];
+
+const supportLinks = [
+  { href: "/onboarding", label: "Onboard a lawyer" },
+  { href: "/creator-studio", label: "Creator studio" },
+  { href: "/network", label: "Social feed" },
+  { href: "/messages", label: "Messages" },
+  { href: "/groups", label: "Practice groups" },
+  { href: "/lawyers/adv-isha-reddy", label: "Open sample profile" }
 ];
 
 export default function HomePage() {
@@ -50,71 +95,42 @@ export default function HomePage() {
       <div className="absolute left-1/2 top-0 -z-10 h-[24rem] w-[24rem] -translate-x-1/2 rounded-full bg-bronze/20 blur-3xl sm:h-[36rem] sm:w-[36rem]" />
       <div className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-8 sm:pb-24 sm:pt-8 lg:px-12">
         <header className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-          <div className="max-w-xl">
+          <div className="max-w-2xl">
             <p className="text-xs uppercase tracking-[0.35em] text-mist/70">Lexevo</p>
-            <p className="mt-2 max-w-md text-sm text-mist/75">
-              Legal identity, discovery, client growth, and audience-building for the next generation of law practice.
+            <p className="mt-2 max-w-xl text-sm leading-7 text-mist/75">
+              A legal platform for lawyer identity, client discovery, communication, AI assistance, and daily work.
             </p>
           </div>
-          <nav className="grid w-full grid-cols-2 gap-3 text-sm sm:grid-cols-3 lg:w-auto lg:grid-cols-4">
-            <Link href="/onboarding" className="button-secondary min-h-[3rem]">
-              View onboarding
-            </Link>
+          <nav className="grid w-full grid-cols-2 gap-3 text-sm sm:grid-cols-4 lg:w-auto">
             <Link href="/find-lawyers" className="button-secondary min-h-[3rem]">
               Find lawyers
             </Link>
-            <Link href="/network" className="button-secondary min-h-[3rem]">
-              Social feed
-            </Link>
-            <Link href="/messages" className="button-secondary min-h-[3rem]">
-              Messages
-            </Link>
-            <Link href="/admin" className="button-secondary min-h-[3rem]">
-              Admin
-            </Link>
             <Link href="/ai-workbench" className="button-secondary min-h-[3rem]">
-              AI
+              AI workbench
             </Link>
             <Link href="/workspace" className="button-secondary min-h-[3rem]">
               Workspace
             </Link>
-            <Link href="/lawyers/adv-isha-reddy" className="button-primary min-h-[3rem]">
-              Open profile preview
+            <Link href="/admin" className="button-primary min-h-[3rem]">
+              Admin
             </Link>
           </nav>
         </header>
 
-        <section className="grid gap-8 pb-16 pt-12 sm:gap-10 sm:pb-20 sm:pt-16 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+        <section className="grid gap-8 pb-16 pt-12 sm:gap-10 sm:pb-20 sm:pt-16 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
           <div>
-            <p className="eyebrow">Phase 6 workspace live</p>
+            <p className="eyebrow">Clean start point</p>
             <h1 className="mt-4 max-w-4xl font-display text-5xl leading-[0.95] text-sand sm:text-6xl lg:text-7xl">
-              A legal platform where every lawyer owns a premium digital identity, audience engine, communication layer, AI workbench, and daily workspace.
+              A clearer legal product where every main task has an obvious place to start.
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-7 text-mist/80 sm:text-lg sm:leading-8">
-              Designed to merge the discoverability of a marketplace, the authority of a personal website,
-              and the network effects of a professional graph without flattening lawyers into commodity listings.
+              Use discovery to find a lawyer, the AI workbench to analyze a matter, the workspace to continue legal
+              operations, and the admin area to manage the platform. The UI is structured so non-technical users can
+              understand what each surface does.
             </p>
-            <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              <Link href="/onboarding" className="button-primary min-h-[3.25rem]">
-                Start onboarding flow
-              </Link>
-              <Link href="/find-lawyers" className="button-secondary min-h-[3.25rem]">
-                Browse lawyer discovery
-              </Link>
-              <Link href="/creator-studio" className="button-secondary min-h-[3.25rem]">
-                Open creator studio
-              </Link>
-              <Link href="/network" className="button-secondary min-h-[3.25rem]">
-                Explore social feed
-              </Link>
-              <Link href="/messages" className="button-secondary min-h-[3.25rem]">
-                Open message center
-              </Link>
-              <Link href="/admin" className="button-secondary min-h-[3.25rem]">
-                Open admin
-              </Link>
-              <Link href="/groups" className="button-secondary min-h-[3.25rem]">
-                Open practice groups
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/find-lawyers" className="button-primary min-h-[3.25rem]">
+                Start with lawyer search
               </Link>
               <Link href="/ai-workbench" className="button-secondary min-h-[3.25rem]">
                 Open AI workbench
@@ -123,33 +139,30 @@ export default function HomePage() {
                 Open workspace
               </Link>
               <a href="#featured-lawyers" className="button-secondary min-h-[3.25rem]">
-                Explore featured profiles
+                View sample profiles
               </a>
             </div>
-            <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              <article className="metric-card">
-                <p className="metric-value">06</p>
-                <p className="metric-label">MVP phases live locally</p>
-              </article>
-              <article className="metric-card">
-                <p className="metric-value">36</p>
-                <p className="metric-label">Product routes and APIs</p>
-              </article>
-              <article className="metric-card">
-                <p className="metric-value">09</p>
-                <p className="metric-label">Roadmap phases preserved in docs</p>
-              </article>
+            <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              {productSignals.map((signal) => (
+                <article key={signal.label} className="metric-card">
+                  <p className="metric-value">{signal.value}</p>
+                  <p className="metric-label">{signal.label}</p>
+                  <p className="mt-3 text-sm leading-7 text-mist/75">{signal.note}</p>
+                </article>
+              ))}
             </div>
           </div>
 
-          <aside className="panel relative overflow-hidden p-6 shadow-halo sm:p-8">
-            <div className="absolute right-6 top-6 h-24 w-24 rounded-full border border-bronze/30 bg-bronze/10 blur-sm" />
-            <p className="eyebrow">Why this foundation matters</p>
-            <div className="mt-6 space-y-5">
-              {platformSignals.map((signal) => (
-                <div key={signal} className="rounded-3xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-sm leading-7 text-mist/85">{signal}</p>
-                </div>
+          <aside className="panel p-6 sm:p-8">
+            <p className="eyebrow">Choose where to go</p>
+            <h2 className="mt-4 font-display text-3xl text-sand sm:text-4xl">The fastest way into each part of the product.</h2>
+            <div className="mt-6 grid gap-4">
+              {primaryFlows.map((flow) => (
+                <Link key={flow.title} href={flow.href} className="feature-card">
+                  <p className="text-xs uppercase tracking-[0.28em] text-bronze">{flow.cta}</p>
+                  <p className="mt-4 font-display text-2xl text-sand">{flow.title}</p>
+                  <p className="mt-3 text-sm leading-7 text-mist/80">{flow.body}</p>
+                </Link>
               ))}
             </div>
           </aside>
@@ -158,21 +171,35 @@ export default function HomePage() {
         <section className="section-shell">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="eyebrow">Product pillars</p>
-              <h2 className="section-heading">Built for identity first, not feature sprawl first.</h2>
+              <p className="eyebrow">What Is Live</p>
+              <h2 className="section-heading">Six product areas now connect into one usable legal workflow.</h2>
             </div>
             <p className="max-w-xl text-sm leading-7 text-mist/75">
-              The first release focuses on reputation, discoverability, conversion, and audience-building so later phases
-              can extend into communication, AI assistance, and workflow tooling.
+              The UI is no longer just a concept board. Search, messaging, AI, and workspace routes all connect to real
+              product flows.
             </p>
           </div>
 
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-7">
-            {mvpTracks.map((track) => (
-              <article key={track.title} className="feature-card">
-                <p className="text-xs uppercase tracking-[0.28em] text-bronze">{track.title}</p>
-                <p className="mt-4 text-lg leading-8 text-sand/90">{track.body}</p>
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            {productPillars.map((pillar) => (
+              <article key={pillar.title} className="feature-card">
+                <p className="text-xs uppercase tracking-[0.28em] text-bronze">{pillar.title}</p>
+                <p className="mt-4 text-lg leading-8 text-sand/90">{pillar.body}</p>
               </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="section-shell">
+          <div className="flex flex-col gap-3">
+            <p className="eyebrow">Support Routes</p>
+            <h2 className="section-heading">Every major button now points to a live surface.</h2>
+          </div>
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {supportLinks.map((item) => (
+              <Link key={item.href} href={item.href} className="button-secondary min-h-[3.25rem]">
+                {item.label}
+              </Link>
             ))}
           </div>
         </section>
@@ -180,7 +207,7 @@ export default function HomePage() {
         <section id="featured-lawyers" className="section-shell">
           <div className="flex flex-col gap-3">
             <p className="eyebrow">Profile previews</p>
-            <h2 className="section-heading">Lawyer profiles that read like polished legal brands.</h2>
+            <h2 className="section-heading">Sample lawyer profiles that show the public-facing quality bar.</h2>
           </div>
 
           <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
